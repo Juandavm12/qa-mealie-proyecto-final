@@ -1,0 +1,79 @@
+# Estado local de herramientas
+.atl/
+
+# Entornos: solo se permite una plantilla sin secretos, revisada manualmente
+.env
+.env.*
+*.env
+*.env.*
+!.env.example
+
+# Secretos locales y claves privadas; nunca incluir credenciales reales
+/secrets/
+/.secrets/
+/credentials/
+/config/local/
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+
+# Bases de datos, respaldos y almacenamiento de la aplicación
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+*.sql
+*.dump
+*.bak
+/backups/
+/backup/
+/data/
+/local-data/
+/mealie-data/
+/volumes/
+
+# Exportaciones y paquetes crudos
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+
+# Python: entornos y cachés
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Salidas crudas: revisar y sanear antes de publicar en rutas diferenciadas
+*.log
+/reports/
+/test-results/
+/playwright-report/
+/coverage/
+/.scannerwork/
+/zap-output/
+/evidencias/crudas/
+/reportes/crudos/
+
+# No se excluyen evidencias/ ni reportes/ completos.
+# Estas rutas permiten archivos de reporte revisados, no datos ni secretos.
+!/evidencias/sanitizadas/
+!/evidencias/sanitizadas/**/
+!/evidencias/sanitizadas/**/*.log
+!/evidencias/sanitizadas/**/*.zip
+!/reportes/sanitizados/
+!/reportes/sanitizados/**/
+!/reportes/sanitizados/**/*.log
+!/reportes/sanitizados/**/*.zip
