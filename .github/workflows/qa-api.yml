@@ -1,0 +1,79 @@
+name: QA API tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api-tests:
+    name: Pytest against a throwaway Mealie v3.25.1
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    services:
+      mealie:
+        # Multi-arch index digest of v3.25.1, same image evaluated locally.
+        image: ghcr.io/mealie-recipes/mealie:v3.25.1@sha256:6066c29eca95a6cac640ecadf734799522f3b646ee4a714e0d13ce795d989ba2
+        ports:
+          - 9925:9000
+        env:
+          ALLOW_SIGNUP: "false"
+          BASE_URL: http://localhost:9925
+          TZ: UTC
+    env:
+      MEALIE_URL: http://localhost:9925
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+
+      - name: Install pinned test dependencies
+        run: python -m pip install --disable-pip-version-check -r pruebas/requirements.txt
+
+      - name: Wait for Mealie v3.25.1
+        run: |
+          python - <<'EOF'
+          import http.client, json, time, urllib.request
+          deadline = time.time() + 180
+          while True:
+              try:
+                  with urllib.request.urlopen("http://localhost:9925/api/app/about", timeout=5) as r:
+                      version = json.load(r)["version"]
+                  assert version == "v3.25.1", f"unexpected Mealie version {version}"
+                  print(f"Mealie {version} is up")
+                  break
+              except (OSError, ValueError, KeyError, http.client.HTTPException):
+                  if time.time() > deadline:
+                      raise SystemExit("Mealie did not become ready in 180 s")
+                  time.sleep(3)
+          EOF
+
+      - name: Prepare synthetic households and users
+        run: python pruebas/preparar_datos_ci.py
+
+      - name: Run test suite
+        run: python -m pytest -v --junitxml=reports/RUN-API-CI-${{ github.run_number }}.xml
+
+      - name: Upload JUnit report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: junit-RUN-API-CI-${{ github.run_number }}
+          path: reports/
+          if-no-files-found: warn
+          retention-days: 30
