@@ -47,7 +47,7 @@
 
 **Interpretación:** el alcance funcional quedó cubierto por completo, pero no se declara aceptación total, porque RF-05.C1 tiene un fallo identificado. El fallo es de navegación (DEF-004: la página del planificador no redirige al login) y no de exposición de datos: la API respondió 401 en CP-M10 y en CP-A04. Esta cobertura mide requisitos ejercitados, no porcentaje de aprobación ni cobertura de código.
 
-**Requisitos no funcionales:** RNF-01, RNF-03, RNF-04 y RNF-05 tienen evaluación ejecutada (4/6). RNF-06 está parcial: hay métricas de SonarQube, pero falta trazar dos rutas del alcance. **RNF-02 (usabilidad) sigue pendiente.**
+**Requisitos no funcionales:** RNF-01, RNF-03, RNF-04, RNF-05 y RNF-06 tienen evaluación ejecutada (5/6). **RNF-02 (usabilidad) sigue pendiente.**
 
 ### 3.2 Casos aprobados y fallidos
 
@@ -126,7 +126,7 @@ SonarQube Community Build 26.11.0.134175, modo Standard Experience, backend Pyth
 | --- | --- | --- | --- |
 | Bugs | 6 | Reliability **C** | 3 tareas `asyncio` creadas sin referencia (pueden terminar antes de tiempo) y 3 `open()` síncronos dentro de funciones `async`, estos últimos en el módulo de IA, fuera del alcance. No se reprodujeron como fallos funcionales |
 | Vulnerabilidades | 6 | Security **E** | 1 Blocker (SEG-001: la aplicación escucha en todas las interfaces), no explotable en el despliegue evaluado porque el puerto solo se publica en `127.0.0.1`; 5 usos de PRNG no criptográfico, todos falsos positivos justificados |
-| Code Smells | 10 | Maintainability **A** | Deuda técnica baja para ≈ 28 KLOC |
+| Code Smells | 10 (4 Blocker, 1 Critical, 5 Major) | Maintainability **A** | Deuda de 1 h 49 min para ≈ 28 KLOC; dos ejemplos analizados en `mantenibilidad/reporte-mantenibilidad.md` |
 | Duplicación | 0,6 % sobre 39 k líneas | — | Prácticamente sin código duplicado |
 | Coverage | 44,3 % | — | Ver §3.5 |
 | Security Hotspots | 0 | **A** | Ningún punto sensible pendiente de revisión |

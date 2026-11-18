@@ -172,6 +172,7 @@ Los respaldos, los revisores y quién ejecutó cada corrida están en `responsab
 | Reportes de seguridad | `seguridad/reporte-zap.md` y `seguridad/triage-sonar-RUN-SONAR-SCAN-W002.md` |
 | Reporte de rendimiento | `rendimiento/reporte-rendimiento.md` |
 | Reporte de fiabilidad | `fiabilidad/reporte-fiabilidad.md` |
+| Reporte de mantenibilidad | `mantenibilidad/reporte-mantenibilidad.md` |
 | Indicadores de calidad | `kpis.md` |
 | Informe final | PDF con las 13 secciones de la guía, entregado en Teams |
 
@@ -193,7 +194,7 @@ La única fecha impuesta es la entrega del **22/11/2026 a las 23:59**. «Respons
 | Plan de pruebas | Paula | 17/11 | 18/11 | JD (asistido) | Completo |
 | Fiabilidad (RNF-03) | Sara | 20/11 | 18/11 (RUN-REL-002 16:01–16:16; RUN-REL-001 inválida) | JD (asistido) | Completo |
 | Usabilidad (RNF-02), con dos participantes | Sara | 20/11 | — | — | Pendiente (propuesta: 20/11) |
-| Mantenibilidad (RNF-06): trazado de dos rutas | Sara | 19/11 | — | — | Pendiente (propuesta: 20/11) |
+| Mantenibilidad (RNF-06): trazado de dos rutas | Sara | 19/11 | 18/11 | JD (asistido) | Completo |
 | Borrador integral del informe | Paula | 21/11 | — | — | Pendiente |
 | Auditoría de la rúbrica y revisión del PDF | Paula, Alejandra, Sara | 22/11 antes de las 19:00 | — | — | Pendiente |
 | Entrega en Teams | JD (Paula como suplente) | 22/11 antes de las 23:59 | — | — | Pendiente |

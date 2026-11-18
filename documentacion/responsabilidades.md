@@ -26,7 +26,7 @@ Esta matriz separa dos cosas que no deben confundirse:
 | Usabilidad (RNF-02) | Sara | Paula / Alejandra | — | — | Pendiente |
 | Fiabilidad (RNF-03) | Sara | Paula / Alejandra | JD (asistido) | RUN-REL-002 (RUN-REL-001 inválida); `fiabilidad/reporte-fiabilidad.md` | Completo |
 | SonarQube | Sara | Alejandra (seguridad estática), JD (cobertura) / Paula | JD (asistido) | RUN-SONAR-SCAN-W002; `seguridad/triage-sonar-RUN-SONAR-SCAN-W002.md` | Completo |
-| Mantenibilidad (RNF-06) | Sara | Alejandra / Paula | — | Métricas de SonarQube disponibles; falta trazar dos rutas del alcance | Parcial |
+| Mantenibilidad (RNF-06) | Sara | Alejandra / Paula | JD (asistido) | `mantenibilidad/reporte-mantenibilidad.md`; capturas 08–10 de RUN-SONAR-SCAN-W002 | Completo |
 | KPIs | Sara | JD (cobertura), Paula (casos) / Alejandra | JD (asistido) | `kpis.md` | Completo |
 | Entrega en Teams | JD | Paula como suplente / Alejandra y Sara | — | — | Pendiente |
 

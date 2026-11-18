@@ -21,6 +21,7 @@ conclusiones.
 | Defectos | Completo | DEF-001..DEF-004, todos de severidad Menor, con ciclo de vida y causa raíz |
 | KPIs | Completo | Cobertura de requisitos 13/13; 15 de 16 casos aprobados |
 | Fiabilidad (RNF-03) | Completo (RUN-REL-002) | 10/10 ciclos con sus datos intactos durante 15 min |
+| Mantenibilidad (RNF-06) | Completo | Rating A con 10 code smells; validación repartida en 5 capas y autorización centralizada en el repositorio genérico |
 | Usabilidad (RNF-02) | Pendiente | Requiere dos participantes del grupo |
 | Informe final | Pendiente | — |
 
@@ -35,6 +36,7 @@ conclusiones.
 | [`documentacion/seguridad/triage-sonar-RUN-SONAR-SCAN-W002.md`](documentacion/seguridad/triage-sonar-RUN-SONAR-SCAN-W002.md) | Triage de vulnerabilidades y bugs de SonarQube |
 | [`documentacion/rendimiento/reporte-rendimiento.md`](documentacion/rendimiento/reporte-rendimiento.md) | Prueba de carga RUN-PERF-001 |
 | [`documentacion/fiabilidad/reporte-fiabilidad.md`](documentacion/fiabilidad/reporte-fiabilidad.md) | Protocolo de fiabilidad RUN-REL-002 |
+| [`documentacion/mantenibilidad/reporte-mantenibilidad.md`](documentacion/mantenibilidad/reporte-mantenibilidad.md) | Trazado de dos rutas hasta la persistencia y code smells de SonarQube |
 | [`documentacion/kpis.md`](documentacion/kpis.md) | Indicadores de calidad e interpretación de las métricas de SonarQube |
 | [`documentacion/responsabilidades.md`](documentacion/responsabilidades.md) | Responsables por frente y quién ejecutó cada corrida |
 
@@ -56,7 +58,7 @@ resultados locales no se generalizan como garantías o SLA de Mealie.
 
 ```text
 .github/workflows/qa-api.yml   # CI: suite de API contra un Mealie v3.25.1 desechable
-documentacion/                 # Plan, casos, defectos, seguridad, rendimiento, fiabilidad, KPIs y responsabilidades
+documentacion/                 # Plan, casos, defectos, seguridad, rendimiento, fiabilidad, mantenibilidad, KPIs y responsabilidades
 pruebas/
 ├── api/                       # Casos automatizados CP-A01..CP-A05 (Pytest)
 ├── fiabilidad/                # Protocolo de fiabilidad RNF-03 (10 ciclos en 15 min)
