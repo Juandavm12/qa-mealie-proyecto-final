@@ -1,84 +1,111 @@
 # QA de Mealie — proyecto final
 
-Base documental del proyecto académico de Aseguramiento de Calidad del Software
-sobre **Mealie v3.25.1**, una aplicación de recetas, planificación de comidas y
-listas de compras. El objetivo es preparar una evaluación reproducible con
-trazabilidad entre requisitos, casos, ejecuciones, hallazgos y conclusiones.
+Proyecto académico de Aseguramiento de Calidad del Software sobre **Mealie v3.25.1**,
+una aplicación de recetas, planificación de comidas y listas de compras. El
+repositorio reúne los casos de prueba, la automatización, el CI y los reportes de
+la evaluación, con trazabilidad entre requisitos, casos, corridas, hallazgos y
+conclusiones.
 
-## Estado real
+## Estado
 
-Este repositorio contiene inicialmente documentación y exclusiones locales.
-**No hay tests implementados o ejecutados, pipeline, análisis SonarQube/ZAP ni
-métricas obtenidas aquí.** Las herramientas indicadas son propuestas, no resultados.
-Las comprobaciones de una instalación personal previa no equivalen a la evaluación
-académica ni a una ejecución de CI.
+**Fecha de corte:** 2026-11-18.
 
-Repositorio público: <https://github.com/Juandavm12/qa-mealie-proyecto-final>.
+| Frente | Estado | Resultado principal |
+| --- | --- | --- |
+| Diseño de casos | Completo | 11 casos manuales y 5 automatizados; partición de equivalencia, valores límite y tabla de decisión |
+| Ejecución manual | Completo (RUN-MAN-001) | 10 de 11 aprobados; CP-M10 fallido (DEF-004) |
+| Automatización y CI | Completo | CP-A01..CP-A05 en GitHub Actions contra un Mealie desechable: 5/5 |
+| Seguridad estática | Completo (RUN-SONAR-SCAN-W002) | 6 vulnerabilidades triadas; ninguna explotable confirmada en el despliegue evaluado |
+| Seguridad dinámica | Completo (RUN-ZAP-001/002) | 0 alertas de riesgo alto; 2 defectos funcionales detectados |
+| Rendimiento (RNF-04) | Completo (RUN-PERF-001) | p95 de 30 ms frente a un umbral de 1500 ms; 0 % de errores |
+| Defectos | Completo | DEF-001..DEF-004, todos de severidad Menor, con ciclo de vida y causa raíz |
+| KPIs | Completo | Cobertura de requisitos 13/13; 15 de 16 casos aprobados |
+| Usabilidad (RNF-02) y fiabilidad (RNF-03) | Pendiente | — |
+| Informe final | Pendiente | — |
 
-## Alcance propuesto
+## Documentación
 
-| Área | Evaluación prevista |
+| Documento | Contenido |
 | --- | --- |
-| Autenticación | Acceso válido, rechazo de credenciales inválidas y contraseña propia |
-| Recetas | Crear, consultar, editar y eliminar datos sintéticos por UI/API |
-| Plan de comidas | Asociar recetas a fechas y comprobar persistencia |
-| Listas de compras | Crear listas y actualizar ítems y su estado |
-| Plan privado | Rechazar lectura/modificación sin sesión o desde otro hogar |
+| [`documentacion/casos-de-prueba.md`](documentacion/casos-de-prueba.md) | Ambiente, técnicas de diseño, casos manuales y automatizados con resultado obtenido, y trazabilidad |
+| [`documentacion/defectos/registro-defectos.md`](documentacion/defectos/registro-defectos.md) | Ciclo de vida, defectos DEF-001..DEF-004 y observaciones |
+| [`documentacion/seguridad/reporte-zap.md`](documentacion/seguridad/reporte-zap.md) | Escaneos ZAP y correspondencia con OWASP Top 10:2025 |
+| [`documentacion/seguridad/triage-sonar-RUN-SONAR-SCAN-W002.md`](documentacion/seguridad/triage-sonar-RUN-SONAR-SCAN-W002.md) | Triage de vulnerabilidades y bugs de SonarQube |
+| [`documentacion/rendimiento/reporte-rendimiento.md`](documentacion/rendimiento/reporte-rendimiento.md) | Prueba de carga RUN-PERF-001 |
+| [`documentacion/kpis.md`](documentacion/kpis.md) | Indicadores de calidad e interpretación de las métricas de SonarQube |
+| [`documentacion/responsabilidades.md`](documentacion/responsabilidades.md) | Responsables por frente y quién ejecutó cada corrida |
 
-Antes de probar autorización se verificarán privacidad, permisos efectivos y
-cuentas sintéticas en hogares separados. Un recurso público no demuestra un
-fallo de aislamiento. Los contratos y resultados esperados se fijarán antes de ejecutar.
+## Alcance
+
+| Área | Qué se evalúa |
+| --- | --- |
+| Autenticación | Acceso válido, rechazo de credenciales inválidas, cambio de contraseña y bloqueo de cuenta |
+| Recetas | Crear, consultar, editar y eliminar datos sintéticos por interfaz y API |
+| Plan de comidas | Asociar recetas a fechas y comprobar la persistencia |
+| Listas de compras | Crear listas y actualizar ítems y su estado |
+| Plan privado | Rechazar lectura o modificación sin sesión o desde otro hogar |
 
 Quedan fuera IA, OIDC, LDAP, SMTP, pagos, importaciones reales de terceros,
-comparaciones de motores de base de datos y estrés destructivo.
-No se generalizarán resultados locales como garantías o SLA de Mealie.
+comparaciones de motores de base de datos y pruebas de estrés destructivas. Los
+resultados locales no se generalizan como garantías o SLA de Mealie.
 
-## Herramientas y requisitos previstos
+## Estructura
 
-| Necesidad | Propuesta pendiente de preparar y validar |
-| --- | --- |
-| Automatización API | Python, Pytest y cliente HTTP; dependencias y versiones fijadas |
-| CI propio | Preparación de ambiente, ejecución y artefactos saneados |
-| Análisis estático | SonarQube sobre código Mealie del tag/commit registrado |
-| Seguridad dinámica | OWASP ZAP con objetivo y autorización delimitados |
-| Carga básica | Locust o k6; elección, recursos y umbrales antes de medir |
+```text
+.github/workflows/qa-api.yml   # CI: suite de API contra un Mealie v3.25.1 desechable
+documentacion/                 # Casos, defectos, seguridad, rendimiento, KPIs y responsabilidades
+pruebas/
+├── api/                       # Casos automatizados CP-A01..CP-A05 (Pytest)
+├── preparar_datos.py          # Crea hogares y usuarios sintéticos en una instancia local
+├── preparar_datos_ci.py       # Versión no interactiva para el CI
+├── rendimiento/               # Prueba de carga con Locust (RNF-04)
+├── zap/                       # Ejecutor aislado de OWASP ZAP
+└── requirements.txt           # Dependencias fijadas de la suite
+reports/                       # Salidas crudas de cada corrida (ignorada por Git)
+```
 
-Se necesitarán Git para colaborar, un entorno de contenedores compatible,
-recursos suficientes y cuentas/datos exclusivamente sintéticos.
-Las versiones, compatibilidad, comandos reproducibles y límites de recursos se
-documentarán al implementar; aquí no se indican instalaciones ni arranques.
-La cobertura deberá instrumentar código real de Mealie: probar HTTP no mide por
-sí solo cobertura del backend ni del sistema completo.
+## Cómo ejecutar
 
-## Flujo de colaboración previsto
-
-Clonar el repositorio:
+Requisitos: Python 3.14 (la versión que usa el CI), Docker y una instancia local de Mealie v3.25.1
+en `http://localhost:9925` (configurable con `MEALIE_URL`).
 
 ```bash
 git clone https://github.com/Juandavm12/qa-mealie-proyecto-final.git
 cd qa-mealie-proyecto-final
+python -m pip install -r pruebas/requirements.txt
+
+# 1. Crear los hogares y usuarios sintéticos (pide el token de administrador sin mostrarlo)
+python pruebas/preparar_datos.py
+
+# 2. Ejecutar la suite: casos de API y pruebas unitarias de las herramientas
+python -m pytest -v
 ```
 
-Leer primero este README y revisar el contenido realmente disponible.
-Los casos, dependencias, configuración y comandos de ejecución se incorporarán
-cuando existan; no hay todavía una suite que ejecutar ni carpetas de plantilla.
-El código upstream se obtendrá por separado, fijando tag y commit, sin copiarlo aquí.
+Las credenciales generadas quedan solo en `.env.qa`, que Git ignora. Los casos de
+API se omiten si no hay credenciales configuradas.
 
-**CI deberá crear su propia instancia aislada y datos desechables.** Nunca apuntará
-a la instancia personal `localhost:9925`, ni utilizará sus cuentas, volumen o datos.
-El futuro pipeline deberá esperar salud, preparar datos sintéticos, ejecutar,
-recoger artefactos saneados y cerrar únicamente su entorno aislado.
+Pruebas no funcionales (cada una exige `--execute` para correr de verdad):
+
+```bash
+# Seguridad dinámica: escaneo baseline o escaneo autenticado de la API
+python pruebas/zap/ejecutar_zap.py --run-id RUN-ZAP-003 --mode baseline --execute
+
+# Rendimiento
+python -m pip install -r pruebas/rendimiento/requirements.txt
+python pruebas/rendimiento/ejecutar_rendimiento.py --run-id RUN-PERF-002 --execute
+```
+
+**El CI crea su propia instancia aislada y datos desechables.** Nunca apunta a
+una instancia personal ni usa sus cuentas, volúmenes o datos.
 
 ## Publicación segura
 
-- No publicar secretos, cookies, tokens, claves, bases de datos ni respaldos.
-- Revisar capturas, logs y metadatos antes de incluirlos; `.gitignore` no sanea archivos.
-- Añadir informe y evidencias solo en versiones explícitamente sanitizadas.
-  Para resultados revisados se reservan las rutas `evidencias/sanitizadas/` y
-  `reportes/sanitizados/`; todavía no se crean esas carpetas.
-- No publicar por ahora nombres completos de integrantes, el PDF del profesor
-  ni copias de los planes internos. El registro de esfuerzo queda en la carpeta
-  padre, fuera del repositorio público y sin enlaces locales desde este README.
+- No se publican secretos, cookies, tokens, claves, bases de datos ni respaldos.
+- Las salidas crudas de cada corrida quedan en `reports/`, ignorada por Git. Solo
+  se publican reportes revisados y saneados.
+- Las capturas y logs se revisan antes de incluirlos; `.gitignore` no sanea archivos.
+- No se publican nombres completos de integrantes, el PDF del profesor ni los
+  planes internos del grupo.
 
 ## Referencias y licencia
 
@@ -90,11 +117,3 @@ recoger artefactos saneados y cerrar únicamente su entorno aislado.
 
 Este repositorio no incluye una copia de Mealie ni sustituye sus avisos legales.
 No se asigna aquí una licencia a los aportes del grupo sin decisión expresa.
-
-## Límites y próximos pasos
-
-1. Confirmar colaboradores y disponibilidad; revisar el contenido publicado antes de ampliarlo.
-2. Confirmar viabilidad, versiones, recursos y contratos del alcance antes de implementar.
-3. Diseñar y revisar casos; después preparar automatización y CI aislado.
-4. Ejecutar evaluaciones autorizadas y conservar resultados reales, incluidos fallos y límites.
-5. Publicar únicamente informe y evidencias saneados con trazabilidad verificable.
