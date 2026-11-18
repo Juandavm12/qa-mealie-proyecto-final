@@ -10,7 +10,7 @@ conclusiones.
 
 | Integrante | Responsabilidades |
 | --- | --- |
-| JD | Automatización de la API con Pytest, casos automatizados y CI; ambiente e instrumentación de cobertura |
+| Juan David (JD) | Automatización de la API con Pytest, casos automatizados y CI; ambiente e instrumentación de cobertura |
 | Paula | Plan de pruebas IEEE/ISO; diseño y ejecución de casos manuales; registro de defectos |
 | Alejandra | Pruebas de seguridad con OWASP ZAP, correspondencia con OWASP Top 10, triage y mitigaciones |
 | Sara | Rendimiento (RNF-04), usabilidad (RNF-02), fiabilidad (RNF-03), SonarQube, mantenibilidad (RNF-06) y KPIs |
