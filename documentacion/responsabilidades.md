@@ -24,7 +24,7 @@ Esta matriz separa dos cosas que no deben confundirse:
 | ZAP, OWASP, triage y mitigaciones | Alejandra | JD / Paula | JD (asistido) | RUN-ZAP-001, RUN-ZAP-002; `seguridad/reporte-zap.md` | Completo |
 | Rendimiento | Sara | Paula / Alejandra | JD (asistido) | RUN-PERF-001; `rendimiento/reporte-rendimiento.md` | Completo |
 | Usabilidad (RNF-02) | Sara | Paula / Alejandra | — | — | Pendiente |
-| Fiabilidad (RNF-03) | Sara | Paula / Alejandra | — | — | Pendiente |
+| Fiabilidad (RNF-03) | Sara | Paula / Alejandra | JD (asistido) | RUN-REL-002 (RUN-REL-001 inválida); `fiabilidad/reporte-fiabilidad.md` | Completo |
 | SonarQube | Sara | Alejandra (seguridad estática), JD (cobertura) / Paula | JD (asistido) | RUN-SONAR-SCAN-W002; `seguridad/triage-sonar-RUN-SONAR-SCAN-W002.md` | Completo |
 | Mantenibilidad (RNF-06) | Sara | Alejandra / Paula | — | Métricas de SonarQube disponibles; falta trazar dos rutas del alcance | Parcial |
 | KPIs | Sara | JD (cobertura), Paula (casos) / Alejandra | JD (asistido) | `kpis.md` | Completo |

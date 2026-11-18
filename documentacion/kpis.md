@@ -12,6 +12,7 @@
 | RUN-SONAR-SCAN-W002 | Análisis SonarQube del backend Python | 2026-11-17 20:09:56–20:12:41 | `seguridad/triage-sonar-RUN-SONAR-SCAN-W002.md`; capturas en `viabilidad_cobertura/evidencias/RUN-SONAR-SCAN-W002/capturas/` |
 | RUN-ZAP-002 | Escaneo activo ZAP de la API autenticada | 2026-11-17 21:59:14–22:05:56 | `seguridad/reporte-zap.md` |
 | RUN-PERF-001 | Prueba de carga RNF-04 con Locust | 2026-11-17 22:24:55–22:27:28 | `rendimiento/reporte-rendimiento.md` |
+| RUN-REL-002 | Protocolo de fiabilidad RNF-03: 10 ciclos durante 15 min | 2026-11-18 16:01:28–16:16:29 | `fiabilidad/reporte-fiabilidad.md` |
 
 ## 2. Resumen
 
@@ -27,6 +28,7 @@
 | Cobertura de código (backend) | **44,3 %** en SonarQube; líneas 52,0 %, ramas 8,9 % | Frontend: no medida |
 | Tiempo de ejecución automatizada | **2,11 s** la suite; **77 s** el job de CI completo | Incluye arrancar Mealie y preparar datos |
 | Rendimiento (RNF-04) | **p95 = 30 ms**, 0 % de errores | Umbral: p95 ≤ 1500 ms y ≤ 1 % |
+| Fiabilidad (RNF-03) | **10/10 ciclos** conformes y 10/10 con sus datos intactos a los 15 min | 0 errores inesperados en 70 peticiones |
 
 ## 3. Detalle e interpretación
 
@@ -45,7 +47,7 @@
 
 **Interpretación:** el alcance funcional quedó cubierto por completo, pero no se declara aceptación total, porque RF-05.C1 tiene un fallo identificado. El fallo es de navegación (DEF-004: la página del planificador no redirige al login) y no de exposición de datos: la API respondió 401 en CP-M10 y en CP-A04. Esta cobertura mide requisitos ejercitados, no porcentaje de aprobación ni cobertura de código.
 
-**Requisitos no funcionales:** RNF-01, RNF-04 y RNF-05 tienen evaluación ejecutada (3/6). RNF-06 está parcial: hay métricas de SonarQube, pero falta trazar dos rutas del alcance. **RNF-02 (usabilidad) y RNF-03 (fiabilidad) siguen pendientes.**
+**Requisitos no funcionales:** RNF-01, RNF-03, RNF-04 y RNF-05 tienen evaluación ejecutada (4/6). RNF-06 está parcial: hay métricas de SonarQube, pero falta trazar dos rutas del alcance. **RNF-02 (usabilidad) sigue pendiente.**
 
 ### 3.2 Casos aprobados y fallidos
 
@@ -110,6 +112,7 @@ Una densidad baja con 16 casos y un escaneo acotado no indica un código casi li
 | RUN-COV-001 (58 pruebas instrumentadas) | 22,65 s | Dentro del contenedor de cobertura |
 | RUN-SONAR-SCAN-W002 | 2 min 45 s | Desde el arranque del scanner hasta su salida |
 | RUN-ZAP-002 | 6 min 42 s | Escaneo activo de 143 operaciones |
+| RUN-REL-002 | 15 min 1 s | 10 ciclos espaciados 90 s y verificación final a los 900 s; la duración la fija el protocolo |
 | RUN-PERF-001 | 2 min 33 s | 30 s de calentamiento, 120 s de medición, preparación y limpieza |
 | RUN-MAN-001 | ≈ 28 min en dos sesiones | 22:47–~23:05 UTC del 17/11 y 14:00–14:10 UTC del 18/11 |
 
@@ -131,14 +134,15 @@ SonarQube Community Build 26.11.0.134175, modo Standard Experience, backend Pyth
 
 **Lectura:** el Security Rating E proviene de una sola regla Blocker cuyo riesgo depende del despliegue; una vez triada, no queda ninguna vulnerabilidad explotable confirmada en el análisis estático. La mantenibilidad es el atributo mejor evaluado. El análisis cubre solo Python: el frontend no se analizó.
 
-### 3.8 Seguridad dinámica y rendimiento
+### 3.8 Seguridad dinámica, rendimiento y fiabilidad
 
 - **ZAP (RUN-ZAP-002):** 0 alertas de riesgo alto, 9 advertencias (WARN) y 113 reglas superadas sobre 464 URL. Las alertas confirmadas de riesgo medio (sin Content Security Policy y sin cabecera anti-clickjacking) corresponden a A02:2025 Security Misconfiguration. Además, el escaneo reveló 2 defectos funcionales (DEF-001, DEF-002) y, en el log, un tercero (DEF-003).
 - **Rendimiento (RUN-PERF-001):** 591 peticiones medidas con 5 usuarios durante 120 s; p50 14 ms, p95 30 ms, p99 55 ms, 0 fallos. RNF-04 se cumple con un margen de ~50× sobre el umbral de 1500 ms, en una medición local por loopback que no se extrapola a producción.
+- **Fiabilidad (RUN-REL-002):** 10 ciclos crear → consultar → editar → planificar → consultar, uno cada 90 s; los 10 fueron conformes y, a los 900 s, las 10 recetas y entradas seguían intactas. RNF-03 se cumple. No se probaron caídas, reinicios ni concurrencia. La corrida RUN-REL-001 quedó inválida por un defecto del script y se conserva sin recalificar.
 
 ## 4. Conclusiones
 
-- **Respaldado por evidencia:** el alcance funcional se ejecutó completo (13/13 subcriterios) con 93,75 % de casos aprobados; RNF-04 se cumple con holgura; no hay alertas de riesgo alto ni vulnerabilidades estáticas explotables confirmadas.
+- **Respaldado por evidencia:** el alcance funcional se ejecutó completo (13/13 subcriterios) con 93,75 % de casos aprobados; RNF-04 se cumple con holgura; RNF-03 se cumple con 10/10 ciclos sin pérdida de datos; no hay alertas de riesgo alto ni vulnerabilidades estáticas explotables confirmadas.
 - **Falló:** CP-M10, por DEF-004. El planificador sin sesión muestra una pantalla vacía en lugar del login, sin exponer datos.
-- **No se puede concluir:** la cobertura de código del frontend, la densidad de defectos del frontend, la usabilidad (RNF-02) ni la fiabilidad (RNF-03). Esta última necesita su protocolo de 10 ciclos, que todavía no se ejecutó.
+- **No se puede concluir:** la cobertura de código del frontend, la densidad de defectos del frontend, ni la usabilidad (RNF-02), que necesita dos participantes del grupo.
 - **Riesgo principal:** 4 defectos menores en manejo de errores y navegación, tres de ellos en respuestas de error de la API (500 o detalles internos en lugar de 404 o 409). Son baratos de corregir y no comprometen datos.

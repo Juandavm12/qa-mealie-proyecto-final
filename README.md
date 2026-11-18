@@ -20,7 +20,8 @@ conclusiones.
 | Rendimiento (RNF-04) | Completo (RUN-PERF-001) | p95 de 30 ms frente a un umbral de 1500 ms; 0 % de errores |
 | Defectos | Completo | DEF-001..DEF-004, todos de severidad Menor, con ciclo de vida y causa raíz |
 | KPIs | Completo | Cobertura de requisitos 13/13; 15 de 16 casos aprobados |
-| Usabilidad (RNF-02) y fiabilidad (RNF-03) | Pendiente | — |
+| Fiabilidad (RNF-03) | Completo (RUN-REL-002) | 10/10 ciclos con sus datos intactos durante 15 min |
+| Usabilidad (RNF-02) | Pendiente | Requiere dos participantes del grupo |
 | Informe final | Pendiente | — |
 
 ## Documentación
@@ -33,6 +34,7 @@ conclusiones.
 | [`documentacion/seguridad/reporte-zap.md`](documentacion/seguridad/reporte-zap.md) | Escaneos ZAP y correspondencia con OWASP Top 10:2025 |
 | [`documentacion/seguridad/triage-sonar-RUN-SONAR-SCAN-W002.md`](documentacion/seguridad/triage-sonar-RUN-SONAR-SCAN-W002.md) | Triage de vulnerabilidades y bugs de SonarQube |
 | [`documentacion/rendimiento/reporte-rendimiento.md`](documentacion/rendimiento/reporte-rendimiento.md) | Prueba de carga RUN-PERF-001 |
+| [`documentacion/fiabilidad/reporte-fiabilidad.md`](documentacion/fiabilidad/reporte-fiabilidad.md) | Protocolo de fiabilidad RUN-REL-002 |
 | [`documentacion/kpis.md`](documentacion/kpis.md) | Indicadores de calidad e interpretación de las métricas de SonarQube |
 | [`documentacion/responsabilidades.md`](documentacion/responsabilidades.md) | Responsables por frente y quién ejecutó cada corrida |
 
@@ -54,9 +56,10 @@ resultados locales no se generalizan como garantías o SLA de Mealie.
 
 ```text
 .github/workflows/qa-api.yml   # CI: suite de API contra un Mealie v3.25.1 desechable
-documentacion/                 # Casos, defectos, seguridad, rendimiento, KPIs y responsabilidades
+documentacion/                 # Plan, casos, defectos, seguridad, rendimiento, fiabilidad, KPIs y responsabilidades
 pruebas/
 ├── api/                       # Casos automatizados CP-A01..CP-A05 (Pytest)
+├── fiabilidad/                # Protocolo de fiabilidad RNF-03 (10 ciclos en 15 min)
 ├── preparar_datos.py          # Crea hogares y usuarios sintéticos en una instancia local
 ├── preparar_datos_ci.py       # Versión no interactiva para el CI
 ├── rendimiento/               # Prueba de carga con Locust (RNF-04)
@@ -90,6 +93,9 @@ Pruebas no funcionales (cada una exige `--execute` para correr de verdad):
 ```bash
 # Seguridad dinámica: escaneo baseline o escaneo autenticado de la API
 python pruebas/zap/ejecutar_zap.py --run-id RUN-ZAP-003 --mode baseline --execute
+
+# Fiabilidad: 10 ciclos durante 15 minutos
+python pruebas/fiabilidad/ejecutar_fiabilidad.py --run-id RUN-REL-003 --execute
 
 # Rendimiento
 python -m pip install -r pruebas/rendimiento/requirements.txt
