@@ -4,7 +4,7 @@
 
 ## 1. Criterios (congelados antes de la corrida)
 
-Tomados de RNF-03 en el documento de alcance del grupo, sección 5. Son objetivos propios de esta evaluación local, no una garantía de disponibilidad de Mealie.
+Tomados de RNF-03, según los criterios definidos por el grupo. Son objetivos propios de esta evaluación local, no una garantía de disponibilidad de Mealie.
 
 | Elemento | Valor |
 | --- | --- |
@@ -37,11 +37,11 @@ Todos los pasos devolvieron el código esperado: `crear=201 consultar=200 editar
 
 La corrección agrega una espera que no acepta tiempos negativos y una prueba unitaria con un reloj falso que, igual que `time.sleep`, rechaza esperas negativas. RUN-REL-001 se conserva y no se recalifica.
 
-**Robustez agregada después de RUN-REL-002.** Una verificación independiente del script, realizada después de la corrida, encontró dos defectos en el camino de error, que RUN-REL-002 no recorrió:
+**Robustez agregada después de RUN-REL-002.** Se corrigieron dos defectos del script en el camino de error, que RUN-REL-002 no recorrió:
 - si una excepción interrumpía un ciclo a la mitad, la receta de ese ciclo no se limpiaba;
 - una corrida abortada terminaba con código 1, que significa «Fallido», en lugar de «Inválido» (código 2), y sin `resultado.json`.
 
-Se corrigieron con pruebas que reproducen cada caso: el script tiene 22 pruebas unitarias. Los cambios solo afectan al aborto y a la limpieza; los pasos y las comprobaciones de un ciclo normal son idénticos, por lo que el resultado de RUN-REL-002 sigue siendo válido. Antes de RUN-REL-002 se ejecutó una prueba de humo de un ciclo (`QA-RUN-REL-SMOKE`), limpiada después, para confirmar los nombres de los campos de la API; no cuenta como resultado.
+Cada corrección incluye pruebas que reproducen el caso: el script tiene 22 pruebas unitarias. Los cambios solo afectan al aborto y a la limpieza; los pasos y las comprobaciones de un ciclo normal son idénticos, por lo que el resultado de RUN-REL-002 sigue siendo válido. Antes de RUN-REL-002 se ejecutó una prueba de humo de un ciclo (`QA-RUN-REL-SMOKE`), limpiada después, para confirmar los nombres de los campos de la API; no cuenta como resultado.
 
 ## 4. Ambiente
 

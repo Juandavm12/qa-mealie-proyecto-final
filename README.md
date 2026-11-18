@@ -12,18 +12,18 @@ conclusiones.
 
 | Frente | Estado | Resultado principal |
 | --- | --- | --- |
+| Plan de pruebas | Completo | [PP-MEALIE-001](documentacion/plan-de-pruebas.md), basado en ISO/IEC/IEEE 29119-3 |
 | Diseño de casos | Completo | 11 casos manuales y 5 automatizados; partición de equivalencia, valores límite y tabla de decisión |
 | Ejecución manual | Completo (RUN-MAN-001) | 10 de 11 aprobados; CP-M10 fallido (DEF-004) |
 | Automatización y CI | Completo | CP-A01..CP-A05 en GitHub Actions contra un Mealie desechable: 5/5 |
 | Seguridad estática | Completo (RUN-SONAR-SCAN-W002) | 6 vulnerabilidades triadas; ninguna explotable confirmada en el despliegue evaluado |
-| Seguridad dinámica | Completo (RUN-ZAP-001/002) | 0 alertas de riesgo alto; 2 defectos funcionales detectados |
+| Seguridad dinámica | Completo (RUN-ZAP-001/002) | 0 alertas de riesgo alto; 3 defectos detectados: DEF-001 y DEF-002 por el escaneo y DEF-003 en el log de Mealie |
 | Rendimiento (RNF-04) | Completo (RUN-PERF-001) | p95 de 30 ms frente a un umbral de 1500 ms; 0 % de errores |
 | Defectos | Completo | DEF-001..DEF-005, todos de severidad Menor, con ciclo de vida y causa raíz |
 | KPIs | Completo | Cobertura de requisitos 13/13; 15 de 16 casos aprobados |
 | Fiabilidad (RNF-03) | Completo (RUN-REL-002) | 10/10 ciclos con sus datos intactos durante 15 min |
 | Mantenibilidad (RNF-06) | Completo | Rating A con 10 code smells; validación repartida en 5 capas y autorización centralizada en el repositorio genérico |
 | Usabilidad (RNF-02) | Completo (RUN-USA-001) | 2/2 participantes completaron la tarea, en 4:30 y 3:30, sin errores bloqueantes |
-| Informe final | Pendiente | — |
 
 ## Documentación
 
@@ -59,7 +59,7 @@ resultados locales no se generalizan como garantías o SLA de Mealie.
 
 ```text
 .github/workflows/qa-api.yml   # CI: suite de API contra un Mealie v3.25.1 desechable
-documentacion/                 # Plan, casos, defectos, seguridad, rendimiento, fiabilidad, mantenibilidad, KPIs y responsabilidades
+documentacion/                 # Plan, casos, defectos, seguridad, rendimiento, fiabilidad, usabilidad, mantenibilidad, KPIs y responsabilidades
 pruebas/
 ├── api/                       # Casos automatizados CP-A01..CP-A05 (Pytest)
 ├── fiabilidad/                # Protocolo de fiabilidad RNF-03 (10 ciclos en 15 min)
@@ -127,4 +127,3 @@ una instancia personal ni usa sus cuentas, volúmenes o datos.
   Mealie se distribuye bajo **AGPL-3.0-only**.
 
 Este repositorio no incluye una copia de Mealie ni sustituye sus avisos legales.
-No se asigna aquí una licencia a los aportes del grupo sin decisión expresa.

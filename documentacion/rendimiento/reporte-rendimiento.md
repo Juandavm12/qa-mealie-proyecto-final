@@ -4,7 +4,7 @@
 
 ## 1. Criterios (congelados antes de la primera corrida)
 
-Tomados de RNF-04 en `Alcance_requisitos_y_responsabilidades.md`, sección 5. Son objetivos propios de esta evaluación local, no un SLA de Mealie.
+Tomados de RNF-04, según los criterios definidos por el grupo. Son objetivos propios de esta evaluación local, no un SLA de Mealie.
 
 | Elemento | Valor |
 | --- | --- |

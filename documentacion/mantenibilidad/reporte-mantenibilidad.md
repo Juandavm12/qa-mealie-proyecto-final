@@ -4,7 +4,7 @@
 
 ## 1. Criterio
 
-Tomado de RNF-06 en el documento de alcance del grupo:
+Tomado de RNF-06, según los criterios definidos por el grupo:
 
 - evaluar la capacidad de **comprender y localizar** cambios de validación y autorización, trazando dos rutas del alcance hasta el esquema y la persistencia, con los módulos, las responsabilidades y los acoplamientos observados;
 - interpretar code smells, duplicación, deuda y Maintainability Rating, con **dos ejemplos concretos**.
@@ -53,7 +53,7 @@ No se fijó un rating exigido, porque no había línea base. Como no se implemen
 | 3 | El mismo error de base de datos produce códigos distintos: `IntegrityError` → 400 en recetas y → 409 en los controladores que usan el mixin | `recipe_crud_routes.py:107-111` frente a `mixins.py:84-90` | Un cliente no puede tratar el conflicto de forma uniforme |
 | 4 | Línea sin efecto: `q.filter(...)` descarta su resultado, así que el filtro `household_id IS NOT NULL` que pretende aplicar nunca se aplica | `repository_generic.py:82-83` | Código que aparenta una protección que no existe. No se observó impacto funcional, porque el filtro principal de §3 sí se aplica |
 
-Una inferencia del análisis sostenía que la observación 2 producía un 200 con cuerpo nulo. La reproducción de DEF-001 mostró que la respuesta real es **500**: FastAPI no puede validar `None` contra el modelo de respuesta. Prevalece el dato medido.
+La reproducción de DEF-001 confirmó el efecto de la observación 2: la respuesta es **500**, porque FastAPI no puede validar `None` contra el modelo de respuesta.
 
 ## 5. Métricas de SonarQube
 
@@ -89,7 +89,7 @@ En `builder.py:451` un bucle recorre `for component in components:` y, dentro de
 ## 6. Interpretación
 
 - **El rating A es coherente con la deuda medida:** 109 minutos de deuda para ≈ 28 KLOC es muy poco, y la duplicación (0,6 %) es casi nula. Los 10 smells se corrigen con renombres o cambios locales.
-- **El rating no refleja los riesgos estructurales.** Lo que más dificulta entender y cambiar el código son decisiones de diseño, no smells: validación repartida en cinco capas, autorización implícita en la clase base y el repositorio genérico, y tres formas distintas de traducir errores a HTTP. Dos de los cuatro defectos confirmados (DEF-001 y DEF-003) nacen de esa inconsistencia en el manejo de errores.
+- **El rating no refleja los riesgos estructurales.** Lo que más dificulta entender y cambiar el código son decisiones de diseño, no smells: validación repartida en cinco capas, autorización implícita en la clase base y el repositorio genérico, y tres formas distintas de traducir errores a HTTP. Dos de los cinco defectos confirmados (DEF-001 y DEF-003) nacen de esa inconsistencia en el manejo de errores.
 - **Fortaleza principal:** la autorización por hogar está centralizada en un único filtro. Cambiarla o auditarla toca un solo punto, y las pruebas CP-A05 y CP-M10 confirmaron que funciona.
 - **Riesgo principal:** como la protección depende de la clase base que hereda cada controlador y no se ve en el controlador, una ruta nueva que herede de la clase equivocada podría quedar sin filtro por hogar sin que la revisión lo note. Es una inferencia del diseño; no se observó ningún caso.
 

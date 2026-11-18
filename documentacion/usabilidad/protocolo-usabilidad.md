@@ -13,7 +13,7 @@ Prueba simple de usabilidad: dos integrantes del grupo realizan una tarea corta 
 | Rol | Quién |
 | --- | --- |
 | Responsable de RNF-02 | Sara |
-| Diseñador de la tarea y facilitador | JD (asistido) |
+| Diseñador de la tarea y facilitador | JD |
 | Participantes P1 y P2 | Dos integrantes entre Paula, Alejandra y Sara que no hayan visto la tarea antes |
 
 P1 es la primera persona que hace la prueba y P2 la segunda. La integrante restante queda como reserva si una sesión resulta inválida.

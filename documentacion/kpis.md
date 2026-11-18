@@ -13,7 +13,7 @@
 | RUN-ZAP-002 | Escaneo activo ZAP de la API autenticada | 2026-11-17 21:59:14–22:05:56 | `seguridad/reporte-zap.md` |
 | RUN-PERF-001 | Prueba de carga RNF-04 con Locust | 2026-11-17 22:24:55–22:27:28 | `rendimiento/reporte-rendimiento.md` |
 | RUN-REL-002 | Protocolo de fiabilidad RNF-03: 10 ciclos durante 15 min | 2026-11-18 16:01:28–16:16:29 | `fiabilidad/reporte-fiabilidad.md` |
-| RUN-USA-001 | Protocolo de usabilidad RNF-02: dos participantes, una tarea de 5 min | 2026-11-18 ~18:38–~19:00 | `usabilidad/reporte-usabilidad.md` |
+| RUN-USA-001 | Protocolo de usabilidad RNF-02: dos participantes, una tarea de 5 min | 2026-11-18 ~18:38–19:11:03 | `usabilidad/reporte-usabilidad.md` |
 
 ## 2. Resumen
 
@@ -31,12 +31,13 @@
 | Rendimiento (RNF-04) | **p95 = 30 ms**, 0 % de errores | Umbral: p95 ≤ 1500 ms y ≤ 1 % |
 | Fiabilidad (RNF-03) | **10/10 ciclos** conformes y 10/10 con sus datos intactos a los 15 min | 0 errores inesperados en 70 peticiones |
 | Usabilidad (RNF-02) | **2/2 participantes** completaron la tarea (4:30 y 3:30) | 0 errores bloqueantes; tiempos aproximados |
+| Seguridad (RNF-05) | **Aprobado** | CP-A04 y CP-A05 aprobados y, en CP-M10, la API respondió 401 sin exponer datos; SEG-001 triada; 0 alertas altas de ZAP |
 
 ## 3. Detalle e interpretación
 
 ### 3.1 Cobertura de requisitos
 
-**Cálculo:** subcriterios ejecutados / subcriterios cerrados del alcance (`Alcance_requisitos_y_responsabilidades.md` §3). Un RF cuenta como ejecutado solo si se ejercitaron todos sus subcriterios.
+**Cálculo:** subcriterios ejecutados / subcriterios cerrados del alcance definidos por el grupo (`casos-de-prueba.md` §3 a §5). Un RF cuenta como ejecutado solo si se ejercitaron todos sus subcriterios.
 
 | RF | Subcriterios | Ejecutados por | Todas las ejecuciones conformes |
 | --- | --- | --- | --- |
@@ -147,7 +148,7 @@ SonarQube Community Build 26.11.0.134175, modo Standard Experience, backend Pyth
 
 ## 4. Conclusiones
 
-- **Respaldado por evidencia:** el alcance funcional se ejecutó completo (13/13 subcriterios) con 93,75 % de casos aprobados; RNF-04 se cumple con holgura; RNF-03 se cumple con 10/10 ciclos sin pérdida de datos; RNF-02 se cumple con 2/2 participantes; no hay alertas de riesgo alto ni vulnerabilidades estáticas explotables confirmadas.
+- **Respaldado por evidencia:** el alcance funcional se ejecutó completo (13/13 subcriterios) con 93,75 % de casos aprobados; RNF-04 se cumple con holgura; RNF-03 se cumple con 10/10 ciclos sin pérdida de datos; RNF-02 se cumple con 2/2 participantes; RNF-05 se cumple (Aprobado): CP-A04 y CP-A05 aprobados y, en CP-M10, la API respondió 401 sin exponer datos; la única vulnerabilidad Blocker de SonarQube (SEG-001) quedó triada, no hay vulnerabilidades estáticas explotables confirmadas y ZAP no reportó alertas altas.
 - **Falló:** CP-M10, por DEF-004. El planificador sin sesión muestra una pantalla vacía en lugar del login, sin exponer datos.
 - **No se puede concluir:** la cobertura de código del frontend ni la densidad de defectos del frontend.
 - **Riesgo principal:** 5 defectos menores en manejo de errores, validación y navegación. Tres son respuestas de error de la API (500 o detalles internos en lugar de 404 o 409) y uno es una validación ausente (DEF-005). Son baratos de corregir y no comprometen datos.

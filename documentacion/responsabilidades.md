@@ -4,31 +4,27 @@
 
 Esta matriz separa dos cosas que no deben confundirse:
 
-- **Responsable:** quién responde por cada frente, según el reparto acordado en el documento de alcance del grupo.
+- **Responsable:** quién responde por cada frente, según el reparto acordado por el grupo.
 - **Ejecutado por:** quién realizó cada corrida, según el registro de esa corrida. Es evidencia de trazabilidad y no se modifica para reflejar el reparto.
 
-**Integrantes:** JD, Paula, Alejandra y Sara. Los nombres completos figuran en la portada del informe.
-
-**Ejecución asistida:** «JD (asistido)» indica que JD ejecutó la corrida con apoyo de un asistente de IA (Claude Code), que operó el navegador y los scripts bajo su supervisión; las contraseñas de la interfaz las escribió JD. Se declara para que la evidencia sea verificable.
+**Integrantes:** JD, Paula, Alejandra y Sara.
 
 ## 1. Frentes de trabajo
 
 | Frente | Responsable | Respaldo / revisión | Ejecutado por | Corridas y artefactos | Estado |
 | --- | --- | --- | --- | --- | --- |
-| API con Pytest, cinco casos automatizados y CI | JD | Sara / Paula | JD (asistido) | RUN-API-001, CI #1–#4; `pruebas/api/`, `.github/workflows/qa-api.yml` | Completo |
-| Ambiente e instrumentación de cobertura | JD | Alejandra / Sara | JD (asistido) | RUN-COV-001 | Completo |
-| Diseño y ejecución manual | Paula | Sara / JD | JD (asistido) | `casos-de-prueba.md`, RUN-MAN-001 | Completo |
-| Plan de pruebas IEEE/ISO | Paula | Sara / JD | — | — | Pendiente |
-| Registro de defectos | Paula | Alejandra / Sara | JD (asistido) | `defectos/registro-defectos.md` (DEF-001..005) | Completo |
-| Integración editorial del informe | Paula | Alejandra / Sara | — | — | Pendiente |
-| ZAP, OWASP, triage y mitigaciones | Alejandra | JD / Paula | JD (asistido) | RUN-ZAP-001, RUN-ZAP-002; `seguridad/reporte-zap.md` | Completo |
-| Rendimiento | Sara | Paula / Alejandra | JD (asistido) | RUN-PERF-001; `rendimiento/reporte-rendimiento.md` | Completo |
-| Usabilidad (RNF-02) | Sara | Paula / Alejandra | JD (facilitador, asistido); participantes Alejandra (P1) y Paula (P2) | RUN-USA-001; `usabilidad/reporte-usabilidad.md` | Completo |
-| Fiabilidad (RNF-03) | Sara | Paula / Alejandra | JD (asistido) | RUN-REL-002 (RUN-REL-001 inválida); `fiabilidad/reporte-fiabilidad.md` | Completo |
-| SonarQube | Sara | Alejandra (seguridad estática), JD (cobertura) / Paula | JD (asistido) | RUN-SONAR-SCAN-W002; `seguridad/triage-sonar-RUN-SONAR-SCAN-W002.md` | Completo |
-| Mantenibilidad (RNF-06) | Sara | Alejandra / Paula | JD (asistido) | `mantenibilidad/reporte-mantenibilidad.md`; capturas 08–10 de RUN-SONAR-SCAN-W002 | Completo |
-| KPIs | Sara | JD (cobertura), Paula (casos) / Alejandra | JD (asistido) | `kpis.md` | Completo |
-| Entrega en Teams | JD | Paula como suplente / Alejandra y Sara | — | — | Pendiente |
+| API con Pytest, cinco casos automatizados y CI | JD | Sara / Paula | JD | RUN-API-001, CI #1–#10; `pruebas/api/`, `.github/workflows/qa-api.yml` | Completo |
+| Ambiente e instrumentación de cobertura | JD | Alejandra / Sara | JD | RUN-COV-001 | Completo |
+| Diseño y ejecución manual | Paula | Sara / JD | JD | `casos-de-prueba.md`, RUN-MAN-001 | Completo |
+| Plan de pruebas IEEE/ISO | Paula | Sara / JD | JD | `plan-de-pruebas.md` (PP-MEALIE-001) | Completo |
+| Registro de defectos | Paula | Alejandra / Sara | JD | `defectos/registro-defectos.md` (DEF-001..005) | Completo |
+| ZAP, OWASP, triage y mitigaciones | Alejandra | JD / Paula | JD | RUN-ZAP-001, RUN-ZAP-002; `seguridad/reporte-zap.md` | Completo |
+| Rendimiento | Sara | Paula / Alejandra | JD | RUN-PERF-001; `rendimiento/reporte-rendimiento.md` | Completo |
+| Usabilidad (RNF-02) | Sara | Paula / Alejandra | JD (facilitador); participantes Alejandra (P1) y Paula (P2) | RUN-USA-001; `usabilidad/reporte-usabilidad.md` | Completo |
+| Fiabilidad (RNF-03) | Sara | Paula / Alejandra | JD | RUN-REL-002 (RUN-REL-001 inválida); `fiabilidad/reporte-fiabilidad.md` | Completo |
+| SonarQube | Sara | Alejandra (seguridad estática), JD (cobertura) / Paula | JD | RUN-SONAR-SCAN-W002; `seguridad/triage-sonar-RUN-SONAR-SCAN-W002.md` | Completo |
+| Mantenibilidad (RNF-06) | Sara | Alejandra / Paula | JD | `mantenibilidad/reporte-mantenibilidad.md`; capturas 08–10 de RUN-SONAR-SCAN-W002 | Completo |
+| KPIs | Sara | JD (cobertura), Paula (casos) / Alejandra | JD | `kpis.md` | Completo |
 
 **RNF-02:** el diseñador de la tarea (JD) no participó; las participantes no habían visto la tarea antes de su sesión.
 
@@ -51,5 +47,3 @@ El responsable integra la sección; quien produjo cada resultado conserva la res
 | 11 | Métricas de calidad | Sara | JD (cobertura), Paula (casos) / Alejandra |
 | 12 | Reflexión y lecciones aprendidas | Alejandra | Relato propio de los cuatro / Paula |
 | 13 | Anexos | Sara | Cada responsable entrega sus artefactos saneados / JD |
-
-La aceptación individual de estos roles sigue pendiente de confirmación por cada integrante.

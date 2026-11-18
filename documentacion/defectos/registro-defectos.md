@@ -45,7 +45,7 @@ Mealie es software de terceros: el equipo no corrige su código. Un defecto conf
 | Corrección propuesta | Usar `self.mixins.get_one(slug, "slug")` también en tags y herramientas |
 | Impacto | Respuesta incorrecta para el cliente y ruido en logs; no expone datos |
 
-**Historial:** Nuevo 2026-11-17 22:06 (ZAP) → Confirmado 22:09 (reproducción manual, 4 peticiones GET) → Analizado 22:11 (causa raíz).
+**Historial (UTC):** Nuevo 2026-11-17 22:06 (ZAP) → Confirmado 22:09 (reproducción manual, 4 peticiones GET) → Analizado 22:11 (causa raíz).
 
 ## DEF-002 — Comentarios de una receta inexistente responden 500
 
@@ -60,7 +60,7 @@ Mealie es software de terceros: el equipo no corrige su código. Un defecto conf
 | Corrección propuesta | Comprobar `if recipe is None` y lanzar `HTTPException(404)` antes de consultar los comentarios |
 | Impacto | Respuesta incorrecta; no expone datos |
 
-**Historial:** Nuevo 2026-11-17 22:06 (ZAP) → Confirmado 22:09 → Analizado 22:11.
+**Historial (UTC):** Nuevo 2026-11-17 22:06 (ZAP) → Confirmado 22:09 → Analizado 22:11.
 
 ## DEF-003 — El 11.º recetario con el mismo nombre falla y expone un error interno
 
@@ -75,7 +75,7 @@ Mealie es software de terceros: el equipo no corrige su código. Un defecto conf
 | Corrección propuesta | Guardar la última `IntegrityError` y relanzarla, o generar un sufijo sin límite fijo; responder 409 con un mensaje controlado |
 | Impacto | No se pueden crear más de 10 recetarios con el mismo nombre en un hogar; el cliente recibe detalles internos |
 
-**Historial:** Nuevo 2026-11-17 22:06 (log) → Confirmado 22:10 (reproducción manual; se había previsto un 500 en el intento 12, el resultado real fue 400 en el 11) → Analizado 22:11.
+**Historial (UTC):** Nuevo 2026-11-17 22:06 (log) → Confirmado 22:10 (reproducción manual; se había previsto un 500 en el intento 12, el resultado real fue 400 en el 11) → Analizado 22:11.
 
 ## DEF-004 — El planificador de comidas se abre sin sesión y no redirige al login
 

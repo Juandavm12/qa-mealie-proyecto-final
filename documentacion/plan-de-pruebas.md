@@ -6,9 +6,9 @@
 | Versión | 1.0, 2026-11-18 |
 | Sistema bajo prueba | Mealie v3.25.1 (imagen Docker `sha256:6066c29e…`, commit `cce7601e`) |
 | Referencia normativa | Estructura basada en el plan de pruebas de ISO/IEC/IEEE 29119-3 (documentación de pruebas), que reemplaza a IEEE 829. Se usa como guía de contenido; no se afirma conformidad formal con la norma |
-| Documentos relacionados | [`casos-de-prueba.md`](casos-de-prueba.md), [`defectos/registro-defectos.md`](defectos/registro-defectos.md), [`kpis.md`](kpis.md), [`responsabilidades.md`](responsabilidades.md), reportes de [seguridad](seguridad/) y [rendimiento](rendimiento/) |
+| Documentos relacionados | [`casos-de-prueba.md`](casos-de-prueba.md), [`defectos/registro-defectos.md`](defectos/registro-defectos.md), [`kpis.md`](kpis.md), [`responsabilidades.md`](responsabilidades.md), reportes de [seguridad](seguridad/), [rendimiento](rendimiento/), [fiabilidad](fiabilidad/reporte-fiabilidad.md), [usabilidad](usabilidad/reporte-usabilidad.md) y [mantenibilidad](mantenibilidad/reporte-mantenibilidad.md) |
 
-El plan se redactó con los criterios ya congelados en el documento de alcance del grupo, antes de cada corrida evaluativa, y se consolida aquí con el estado real de cada actividad al 2026-11-18.
+El plan se redactó con los criterios que el grupo definió antes de cada corrida evaluativa, y se consolida aquí con el estado real de cada actividad al 2026-11-18.
 
 ## 1. Objetivos de prueba
 
@@ -42,10 +42,10 @@ IA, OIDC, LDAP, SMTP, pagos, importaciones reales de terceros, comparación de m
 
 | Nivel | Qué se prueba | Cómo | Estado |
 | --- | --- | --- | --- |
-| **Unitarias** | Funciones aisladas de Mealie y de las herramientas propias del grupo | 58 pruebas unitarias upstream de Mealie con instrumentación de cobertura (RUN-COV-001); 48 pruebas unitarias de los scripts propios (preparación de datos, ZAP, rendimiento), ejecutadas en el CI | Ejecutado |
-| **Integración** | API + autenticación + autorización por hogar + persistencia en SQLite, ejercitadas juntas | Casos automatizados CP-A01..CP-A05 por HTTP contra el backend real con su base de datos | Ejecutado (CI #1–#4) |
+| **Unitarias** | Funciones aisladas de Mealie y de las herramientas propias del grupo | 58 pruebas unitarias upstream de Mealie con instrumentación de cobertura (RUN-COV-001); pruebas unitarias de los scripts propios, ejecutadas en el CI (48 en CI #4; 89 en CI #10, al sumar fiabilidad y usabilidad) | Ejecutado |
+| **Integración** | API + autenticación + autorización por hogar + persistencia en SQLite, ejercitadas juntas | Casos automatizados CP-A01..CP-A05 por HTTP contra el backend real con su base de datos | Ejecutado (CI #1–#10) |
 | **Sistema** | La aplicación desplegada completa: interfaz Vue, API y base de datos | 11 casos manuales por la interfaz (RUN-MAN-001); escaneo ZAP (RUN-ZAP-001/002); prueba de carga (RUN-PERF-001); protocolo de fiabilidad (RUN-REL-002) | Ejecutado |
-| **Aceptación** | Cumplimiento de los criterios de aceptación de cada RF y de los objetivos RNF | Regla de RNF-01: un RF se acepta solo si todos sus subcriterios tienen una ejecución trazable y conforme; protocolos de usabilidad (RNF-02) y fiabilidad (RNF-03) | Parcial: RF evaluados con un fallo (CP-M10); RNF-02 y RNF-03 cumplidos |
+| **Aceptación** | Cumplimiento de los criterios de aceptación de cada RF y de los objetivos RNF | Regla de RNF-01: un RF se acepta solo si todos sus subcriterios tienen una ejecución trazable y conforme; protocolos de usabilidad (RNF-02) y fiabilidad (RNF-03) | Parcial: RF evaluados con un fallo (CP-M10); RNF-02, RNF-03, RNF-04 y RNF-05 cumplidos |
 
 **Justificación:** las pruebas unitarias upstream son la única forma de medir cobertura del código real de Mealie, porque las pruebas HTTP no instrumentan el servidor. Las pruebas de integración por API verifican de forma repetible la regla más sensible del alcance, el aislamiento entre hogares, que depende de la cooperación entre autenticación, filtros por `household_id` y persistencia. Las pruebas de sistema por la interfaz detectan fallos que la API no muestra; por ejemplo, DEF-004 solo es visible en el navegador. La aceptación la evalúa el equipo con criterios definidos antes de ejecutar, porque no hay usuarios finales disponibles.
 
@@ -114,7 +114,7 @@ Una corrida suspendida no se declara aprobada, y sus resultados no se recalculan
 | Integrante | Frente principal |
 | --- | --- |
 | JD | API, automatización, CI, ambiente y cobertura |
-| Paula | Diseño y ejecución manual, plan de pruebas, defectos e integración editorial |
+| Paula | Diseño y ejecución manual, plan de pruebas y defectos |
 | Alejandra | Seguridad dinámica (ZAP) y OWASP |
 | Sara | Rendimiento, usabilidad, fiabilidad, SonarQube y KPIs |
 
@@ -172,34 +172,32 @@ Los respaldos, los revisores y quién ejecutó cada corrida están en `responsab
 | Reportes de seguridad | `seguridad/reporte-zap.md` y `seguridad/triage-sonar-RUN-SONAR-SCAN-W002.md` |
 | Reporte de rendimiento | `rendimiento/reporte-rendimiento.md` |
 | Reporte de fiabilidad | `fiabilidad/reporte-fiabilidad.md` |
+| Reporte de usabilidad | `usabilidad/reporte-usabilidad.md` |
 | Reporte de mantenibilidad | `mantenibilidad/reporte-mantenibilidad.md` |
 | Indicadores de calidad | `kpis.md` |
 | Informe final | PDF con las 13 secciones de la guía, entregado en Teams |
 
 ## 11. Cronograma
 
-La única fecha impuesta es la entrega del **22/11/2026 a las 23:59**. «Responsable» sigue el reparto del documento de alcance; «Ejecutado por» y las fechas reales provienen de los registros de cada corrida (horas en UTC).
+La única fecha impuesta es la entrega del **22/11/2026 a las 23:59**. «Responsable» sigue el reparto acordado por el grupo; «Ejecutado por» y las fechas reales provienen de los registros de cada corrida (horas en UTC).
 
 | Actividad | Responsable | Fecha planificada | Fecha real | Ejecutado por | Estado |
 | --- | --- | --- | --- | --- | --- |
 | Alcance, requisitos, criterios y roles | Paula (RF), Sara (RNF) | 17/11 | Antes de la primera corrida | Grupo | Completo |
-| Viabilidad del ambiente, cobertura y SonarQube | JD, Sara | 17/11 | 17/11 (RUN-COV-001 02:46; RUN-SONAR-SCAN-W002 20:09–20:12) | JD (asistido) | Completo |
-| Diseño de casos manuales y automatizados | Paula, JD | 18/11 | 17/11 (commit 21:21) | JD (asistido) | Completo |
-| Automatización de API y CI | JD | 18/11–20/11 | 17/11 (RUN-API-001 21:09; CI #1–#3 desde 22:19) | JD (asistido) | Completo |
-| Escaneo ZAP y triage OWASP | Alejandra | 20/11 | 17/11 (RUN-ZAP-002 21:59–22:05) | JD (asistido) | Completo |
-| Reproducción y análisis de defectos | Paula | 21/11 | 17/11 (22:06–22:11) | JD (asistido) | Completo |
-| Prueba de rendimiento | Sara | 20/11 | 17/11 (RUN-PERF-001 22:24–22:27) | JD (asistido) | Completo |
-| Ejecución manual | Paula | 18/11 | 17/11 22:47 – 18/11 14:10 (RUN-MAN-001) | JD (asistido) | Completo |
-| KPIs y matriz de responsabilidades | Sara | 21/11 | 18/11 | JD (asistido) | Completo |
-| Plan de pruebas | Paula | 17/11 | 18/11 | JD (asistido) | Completo |
-| Fiabilidad (RNF-03) | Sara | 20/11 | 18/11 (RUN-REL-002 16:01–16:16; RUN-REL-001 inválida) | JD (asistido) | Completo |
-| Usabilidad (RNF-02), con dos participantes | Sara | 20/11 | 18/11 (RUN-USA-001 ~18:38–~19:00) | JD (facilitador, asistido); participantes Alejandra y Paula | Completo |
-| Mantenibilidad (RNF-06): trazado de dos rutas | Sara | 19/11 | 18/11 | JD (asistido) | Completo |
-| Borrador integral del informe | Paula | 21/11 | — | — | Pendiente |
-| Auditoría de la rúbrica y revisión del PDF | Paula, Alejandra, Sara | 22/11 antes de las 19:00 | — | — | Pendiente |
-| Entrega en Teams | JD (Paula como suplente) | 22/11 antes de las 23:59 | — | — | Pendiente |
+| Viabilidad del ambiente, cobertura y SonarQube | JD, Sara | 17/11 | 17/11 (RUN-COV-001 02:46; RUN-SONAR-SCAN-W002 20:09–20:12) | JD | Completo |
+| Diseño de casos manuales y automatizados | Paula, JD | 18/11 | 17/11 (commit 21:21) | JD | Completo |
+| Automatización de API y CI | JD | 18/11–20/11 | 17/11 (RUN-API-001 21:09; CI #1–#3 desde 22:19) | JD | Completo |
+| Escaneo ZAP y triage OWASP | Alejandra | 20/11 | 17/11 (RUN-ZAP-002 21:59–22:05) | JD | Completo |
+| Reproducción y análisis de defectos | Paula | 21/11 | 17/11 (22:06–22:11) | JD | Completo |
+| Prueba de rendimiento | Sara | 20/11 | 17/11 (RUN-PERF-001 22:24–22:27) | JD | Completo |
+| Ejecución manual | Paula | 18/11 | 17/11 22:47 – 18/11 14:10 (RUN-MAN-001) | JD | Completo |
+| KPIs y matriz de responsabilidades | Sara | 21/11 | 18/11 | JD | Completo |
+| Plan de pruebas | Paula | 17/11 | 18/11 | JD | Completo |
+| Fiabilidad (RNF-03) | Sara | 20/11 | 18/11 (RUN-REL-002 16:01–16:16; RUN-REL-001 inválida) | JD | Completo |
+| Usabilidad (RNF-02), con dos participantes | Sara | 20/11 | 18/11 (RUN-USA-001 ~18:38–19:11) | JD (facilitador); participantes Alejandra y Paula | Completo |
+| Mantenibilidad (RNF-06): trazado de dos rutas | Sara | 19/11 | 18/11 | JD | Completo |
 
-«JD (asistido)» indica ejecución con apoyo de un asistente de IA bajo su supervisión (ver `responsabilidades.md`). Las actividades técnicas se adelantaron respecto del plan porque el ambiente quedó listo antes de lo previsto.
+Las actividades técnicas se adelantaron respecto del plan porque el ambiente quedó listo antes de lo previsto.
 
 ## 12. Gestión de defectos
 

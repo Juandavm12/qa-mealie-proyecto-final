@@ -34,9 +34,9 @@ Ninguna alerta de riesgo alto en ninguna corrida.
 | --- | --- | --- | --- | --- | --- | --- |
 | Content Security Policy no definida (10038) | Medio (Alta) | 2 | 3 | 693 | A02 Security Misconfiguration | Confirmada |
 | Falta cabecera anti-clickjacking (10020) | Medio (Media) | 2 | 3 | 1021 | A02 | Confirmada |
-| X-Content-Type-Options ausente (10021) | Bajo | 4 | 5 | 693 | A02 | Confirmada |
+| X-Content-Type-Options ausente (10021) | Bajo | 4 | 12 | 693 | A02 | Confirmada |
 | Permissions-Policy ausente (10063) | Bajo | 5 | 3 | 693 | A02 | Confirmada |
-| Cross-Origin-Resource/Opener/Embedder-Policy (90004) | Bajo | 5 | 7 | 693 | A02 | Confirmada |
+| Cross-Origin-Resource/Opener/Embedder-Policy (90004) | Bajo | 5 | 12 | 693 | A02 | Confirmada |
 | Respuesta de error de servidor 500 (100000) | Bajo (Alta) | — | 14 | 388 | A10 Mishandling of Exceptional Conditions | **Confirmada: DEF-001, DEF-002** |
 | Divulgación de error de aplicación (90022) | Bajo | — | 5 | 550 | A10 | Parcial: los 500 devuelven el texto genérico «Internal Server Error», sin traza |
 | Mensajes de depuración (10023) | Bajo | — | 5 | 1295 | A10 | Falso positivo: misma evidencia genérica |

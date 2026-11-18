@@ -8,7 +8,7 @@
 | Protocolo | [`protocolo-usabilidad.md`](protocolo-usabilidad.md), con la instrucción [`instruccion-participante.md`](instruccion-participante.md) y la hoja [`hoja-registro.md`](hoja-registro.md) |
 | Fecha | 2026-11-18. P1 desde ~18:38 UTC; P2 desde 18:56:39 UTC |
 | Ambiente | Mealie v3.25.1 local (`localhost:9925`), Chrome 157 en Windows, sesiones presenciales |
-| Facilitador | JD (asistido) |
+| Facilitador | JD |
 | Participantes | P1: Alejandra. P2: Paula |
 | Responsable de RNF-02 | Sara |
 
@@ -30,7 +30,7 @@ La persona participante inicia sesión con el usuario sintético A y debe:
 | Usa apps de recetas o listas | A veces | Nunca |
 | Sesión iniciada | 00:20 | 00:20 |
 | Receta encontrada y abierta | 00:30 | 00:30 |
-| Receta agregada al plan | 01:00 (corregida hacia 02:00) | 01:00 |
+| Receta agregada al plan | 01:00 en el primer intento; corregida hacia 02:00 (DEF-005) | 01:00 |
 | Ítem agregado a la lista | 03:00 | 02:00 |
 | Tiempo total | **4:30** | **3:30** |
 | Errores no bloqueantes | 2 | 1 |
@@ -54,13 +54,13 @@ La persona participante inicia sesión con el usuario sintético A y debe:
 
 ## 4. Hallazgos
 
-**OBS-004: «dulce de leche» desplaza a «Leche».** Es el hallazgo de usabilidad más claro, porque les pasó a las dos participantes. La base de alimentos que trae Mealie incluye «dulce de leche», pero no «leche», y el autocompletado resalta la primera coincidencia parcial. Ninguna cometió el error, aunque a P2 le costó tiempo según su propio comentario.
+**OBS-004: «dulce de leche» desplaza a «Leche».** Es el hallazgo de usabilidad más claro, porque les pasó a las dos participantes. La base de alimentos que trae Mealie incluye «dulce de leche», pero no «leche», y el autocompletado resalta la primera coincidencia parcial. Ninguna cometió un error bloqueante, aunque a P2 le costó tiempo según su propio comentario.
 
 **DEF-005: el plan acepta recetas inexistentes.** Se reprodujo por API, independientemente de la sesión: `POST /api/households/mealplans` con un `recipeId` inventado responde 201 y guarda una entrada sin receta. La causa está localizada en el código y se documenta en el [registro de defectos](../defectos/registro-defectos.md). Lo que no está probado es por qué la interfaz envió en P1 un identificador inexistente. La hipótesis más probable es que la pestaña venía abierta desde el piloto del ambiente y conservaba los identificadores de las recetas anteriores, que se habían borrado y recreado al preparar los datos. En P2 los identificadores no cambiaron y el problema no apareció.
 
 ## 5. Piloto del ambiente
 
-Antes de las sesiones, JD recorrió la tarea completa con el asistente para comprobar el ambiente. No cuenta como sesión ni aporta al resultado. Detectó el riesgo de «dulce de leche» y un defecto en el script de verificación, que aceptaba «dulce de leche» como «Leche». El script se corrigió y se agregaron pruebas que reproducen el caso antes de las sesiones reales.
+Antes de las sesiones se recorrió la tarea completa para comprobar el ambiente. Este recorrido no cuenta como sesión ni aporta al resultado. Detectó el riesgo de «dulce de leche» y un defecto en el script de verificación, que aceptaba «dulce de leche» como «Leche». El script se corrigió y se agregaron pruebas que reproducen el caso antes de las sesiones reales.
 
 ## 6. Conclusión
 

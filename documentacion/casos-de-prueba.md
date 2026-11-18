@@ -1,6 +1,6 @@
 # Diseño de casos de prueba — Mealie v3.25.1
 
-**Estado:** casos manuales **ejecutados** en RUN-MAN-001 (2026-11-17/18; ejecutor JD, ejecución asistida por Claude Code). «Resultado obtenido» y «Estado» resumen esa corrida; el registro crudo y las capturas están en `reports/manual/RUN-MAN-001/` (fuera de Git). Los resultados esperados se conservan tal como se diseñaron; donde el diseño resultó incorrecto se indica la corrección. Fuente de requisitos: `Alcance_requisitos_y_responsabilidades.md` (RF-01..RF-05). Contratos verificados en el código del tag `v3.25.1` (commit `cce7601e`); las referencias `archivo:línea` son relativas a `mealie-v3.25.1/`.
+**Estado:** casos manuales **ejecutados** en RUN-MAN-001 (2026-11-17/18; ejecutor JD). «Resultado obtenido» y «Estado» resumen esa corrida; el registro crudo y las capturas están en `reports/manual/RUN-MAN-001/` (fuera de Git). Los resultados esperados se conservan tal como se diseñaron; donde el diseño resultó incorrecto se indica la corrección. Fuente de requisitos: RF-01..RF-05 definidos por el grupo (ver `plan-de-pruebas.md` §2.1). Contratos verificados en el código del tag `v3.25.1` (commit `cce7601e`); las referencias `archivo:línea` son relativas a `mealie-v3.25.1/`.
 
 ## 1. Ambiente y datos de prueba
 

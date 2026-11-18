@@ -1,9 +1,10 @@
 """Ejecuta el protocolo de fiabilidad RNF-03 contra Mealie y lo evalúa.
 
-Protocolo congelado en el documento de alcance: diez ciclos secuenciales
-crear receta → consultar → editar → planificar → consultar, con datos nuevos
-por ciclo, durante al menos 15 minutos. Al final se vuelven a leer las recetas
-y entradas de todos los ciclos para comprobar que nada se perdió.
+Protocolo definido por el grupo antes de la primera corrida evaluativa: diez
+ciclos secuenciales crear receta → consultar → editar → planificar →
+consultar, con datos nuevos por ciclo, durante al menos 15 minutos. Al final
+se vuelven a leer las recetas y entradas de todos los ciclos para comprobar
+que nada se perdió.
 
 Criterio: Aprobado si los 10 ciclos son conformes, la verificación final
 encuentra todos los datos y la observación dura al menos 15 minutos. Un ciclo

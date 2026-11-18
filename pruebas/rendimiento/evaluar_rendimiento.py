@@ -1,6 +1,6 @@
 """Evaluate a Locust run against the frozen RNF-04 criteria (stdlib only).
 
-Criteria, frozen before the first evaluative run (Alcance, section 5):
+Criteria, defined by the group before the first evaluative run:
 p95 of the measured request <= 1500 ms and error rate <= 1 %.
 """
 from __future__ import annotations
