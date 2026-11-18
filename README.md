@@ -6,9 +6,18 @@ repositorio reúne los casos de prueba, la automatización, el CI y los reportes
 la evaluación, con trazabilidad entre requisitos, casos, corridas, hallazgos y
 conclusiones.
 
-## Estado
+## Integrantes y responsabilidades
 
-**Fecha de corte:** 2026-11-18.
+| Integrante | Responsabilidades |
+| --- | --- |
+| JD | Automatización de la API con Pytest, casos automatizados y CI; ambiente e instrumentación de cobertura |
+| Paula | Plan de pruebas IEEE/ISO; diseño y ejecución de casos manuales; registro de defectos |
+| Alejandra | Pruebas de seguridad con OWASP ZAP, correspondencia con OWASP Top 10, triage y mitigaciones |
+| Sara | Rendimiento (RNF-04), usabilidad (RNF-02), fiabilidad (RNF-03), SonarQube, mantenibilidad (RNF-06) y KPIs |
+
+El detalle por frente, con respaldo, revisión y quién ejecutó cada corrida, está en [`documentacion/responsabilidades.md`](documentacion/responsabilidades.md).
+
+## Estado
 
 | Frente | Estado | Resultado principal |
 | --- | --- | --- |
