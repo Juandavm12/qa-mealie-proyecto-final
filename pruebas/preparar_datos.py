@@ -1,0 +1,235 @@
+"""Prepare synthetic Mealie households and users for the QA test suite.
+
+Creates the households ``QA-Hogar-A`` and ``QA-Hogar-B`` in the administrator's
+group and three non-admin users (A and C in household A, B in household B)
+with random passwords, writes their credentials to the git-ignored
+``.env.qa`` file and verifies that each user can log in and lands in the
+expected household.
+
+Safety contract:
+- the admin API token is read with ``getpass`` from an interactive TTY and is
+  never written or printed;
+- generated passwords are written only to ``.env.qa`` and never printed;
+- the script refuses to run when ``.env.qa`` already exists or when any of
+  the synthetic users already exists, so it never resets a password;
+- if a later step fails, credentials of users already created are still
+  written so they are not lost.
+"""
+from __future__ import annotations
+
+import argparse
+import getpass
+import json
+import os
+import secrets
+import sys
+import urllib.error
+import urllib.parse
+import urllib.request
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any, Callable, TextIO
+
+DEFAULT_URL = "http://localhost:9925"
+ENV_PATH = Path(__file__).resolve().parent.parent / ".env.qa"
+HOUSEHOLDS = ("QA-Hogar-A", "QA-Hogar-B")
+USERS = (
+    # (env key, username, full name, email, household)
+    ("A", "qa_usuario_a", "QA Usuario A", "qa.usuario.a@example.com", "QA-Hogar-A"),
+    ("B", "qa_usuario_b", "QA Usuario B", "qa.usuario.b@example.com", "QA-Hogar-B"),
+    ("C", "qa_usuario_c", "QA Usuario C", "qa.usuario.c@example.com", "QA-Hogar-A"),
+)
+
+
+class SetupError(RuntimeError):
+    """A safety check or API call failed."""
+
+
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    """Never follow redirects: urllib would forward the Authorization header."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+_OPENER = urllib.request.build_opener(_NoRedirect)
+LOCAL_HOSTS = {"localhost", "127.0.0.1", "::1"}
+
+
+def check_url(url: str) -> None:
+    """Allow plain HTTP only to the local machine; anything else must be HTTPS."""
+    parsed = urllib.parse.urlsplit(url)
+    if parsed.scheme == "https" and parsed.hostname:
+        return
+    if parsed.scheme == "http" and parsed.hostname in LOCAL_HOSTS:
+        return
+    raise SetupError(f"refusing URL {url!r}: plain HTTP is allowed only to localhost")
+
+
+class Api:
+    """Minimal JSON/form client for the Mealie API (stdlib only)."""
+
+    def __init__(self, base_url: str):
+        self.base_url = base_url.rstrip("/")
+
+    def request(self, method: str, path: str, *, token: str | None = None,
+                json: dict | None = None, form: dict | None = None) -> tuple[int, Any]:
+        headers = {"Accept": "application/json"}
+        data = None
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+        if json is not None:
+            data = _json_dumps(json).encode("utf-8")
+            headers["Content-Type"] = "application/json"
+        elif form is not None:
+            data = urllib.parse.urlencode(form).encode("utf-8")
+            headers["Content-Type"] = "application/x-www-form-urlencoded"
+        req = urllib.request.Request(self.base_url + path, data=data, headers=headers,
+                                     method=method)
+        try:
+            with _OPENER.open(req, timeout=30) as resp:
+                return resp.status, _json_loads(resp.read())
+        except urllib.error.HTTPError as error:
+            return error.code, _json_loads(error.read())
+
+
+def _json_dumps(value: Any) -> str:
+    return json.dumps(value)
+
+
+def _json_loads(raw: bytes) -> Any:
+    try:
+        return json.loads(raw or b"null")
+    except ValueError:
+        return None
+
+
+@dataclass
+class Deps:
+    api: Any = None
+    read_token: Callable[[str], str] = getpass.getpass
+    isatty: Callable[[], bool] = lambda: sys.stdin.isatty()
+    env_path: Path = ENV_PATH
+    out: TextIO = field(default_factory=lambda: sys.stdout)
+
+
+def expect(status: int, body: Any, expected: int, what: str) -> Any:
+    if status != expected:
+        raise SetupError(f"{what}: HTTP {status} (expected {expected}) {safe_detail(body)}".strip())
+    return body
+
+
+def safe_detail(body: Any) -> str:
+    """Summarize an error body without echoing request input (it may hold a password)."""
+    detail = body.get("detail") if isinstance(body, dict) else None
+    if isinstance(detail, str):
+        return detail
+    if isinstance(detail, list):
+        parts = []
+        for item in detail:
+            if isinstance(item, dict):
+                loc = ".".join(str(p) for p in item.get("loc", []))
+                parts.append(f"{loc}: {item.get('msg', '')}")
+        return "; ".join(parts)
+    return ""
+
+
+def write_env(path: Path, base_url: str, created: list[tuple[str, str, str, str]]) -> None:
+    """Write credentials with exclusive create: never overwrites an existing file."""
+    lines = ["# Synthetic QA credentials generated by pruebas/preparar_datos.py.",
+             "# Git-ignored. Never commit, paste or capture these values.",
+             f"MEALIE_URL={base_url}"]
+    for key, username, email, password in created:
+        lines += [f"QA_USER_{key}_USERNAME={username}", f"QA_USER_{key}_EMAIL={email}",
+                  f"QA_USER_{key}_PASSWORD={password}"]
+    with path.open("x", encoding="utf-8", newline="\n") as handle:
+        handle.write("\n".join(lines) + "\n")
+
+
+def main(argv: list[str] | None = None, deps: Deps | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--url", default=os.environ.get("MEALIE_URL", DEFAULT_URL))
+    args = parser.parse_args(argv)
+    deps = deps or Deps()
+    out = deps.out
+    created: list[tuple[str, str, str, str]] = []
+    try:
+        check_url(args.url)
+        api = deps.api or Api(args.url)
+        if deps.env_path.exists():
+            raise SetupError(f"{deps.env_path.name} already exists; data was already prepared")
+        if not deps.isatty():
+            raise SetupError("an interactive TTY is required for the hidden admin token prompt")
+        token = deps.read_token("Mealie admin API token (input hidden): ").strip()
+        if not token:
+            raise SetupError("empty token")
+
+        admin = expect(*api.request("GET", "/api/users/self", token=token), 200, "admin token")
+        if admin.get("admin") is not True:
+            raise SetupError("the token does not belong to an administrator")
+        group_id, group_name = admin["groupId"], admin["group"]
+
+        existing = expect(*api.request("GET", "/api/admin/users?page=1&perPage=-1", token=token),
+                          200, "list users")["items"]
+        taken = {u.get("username") for u in existing} | {u.get("email") for u in existing}
+        clashes = [name for _, name, _, email, _ in USERS if name in taken or email in taken]
+        if clashes:
+            raise SetupError(f"synthetic users already exist: {', '.join(clashes)}; "
+                             "refusing to reset passwords")
+
+        households = expect(*api.request("GET", "/api/admin/households?page=1&perPage=-1",
+                                         token=token), 200, "list households")["items"]
+        present = {h["name"] for h in households if h.get("groupId") == group_id}
+        for name in HOUSEHOLDS:
+            if name in present:
+                print(f"household {name}: already present, reused", file=out)
+                continue
+            expect(*api.request("POST", "/api/admin/households", token=token,
+                                json={"name": name, "groupId": group_id}),
+                   201, f"create household {name}")
+            print(f"household {name}: created", file=out)
+
+        for key, username, full_name, email, household in USERS:
+            password = secrets.token_urlsafe(18)
+            expect(*api.request("POST", "/api/admin/users", token=token, json={
+                "username": username, "fullName": full_name, "email": email,
+                "password": password, "group": group_name, "household": household,
+                "admin": False, "canInvite": False, "canManage": False,
+                "canManageHousehold": False, "canOrganize": False,
+            }), 201, f"create user {username}")
+            created.append((key, username, email, password))
+            print(f"user {username}: created in {household}", file=out)
+
+        for key, username, email, password in created:
+            login = expect(*api.request("POST", "/api/auth/token",
+                                        form={"username": email, "password": password}),
+                           200, f"login {username}")
+            me = expect(*api.request("GET", "/api/users/self", token=login["access_token"]),
+                        200, f"identity {username}")
+            expected = next(h for k, *_, h in USERS if k == key)
+            if me.get("username") != username or me.get("household") != expected:
+                raise SetupError(f"{username} landed in {me.get('household')!r}, "
+                                 f"expected {expected!r}")
+            if me.get("admin") is not False or me.get("groupId") != group_id:
+                raise SetupError(f"{username} has unexpected admin flag or group")
+            print(f"user {username}: login verified, household {expected}", file=out)
+        return 0
+    except SetupError as error:
+        print(f"SETUP FAILED: {error}", file=sys.stderr)
+        return 2
+    except (OSError, ValueError, KeyError) as error:
+        print(f"SETUP FAILED: {type(error).__name__}: {error}", file=sys.stderr)
+        return 2
+    finally:
+        if created:
+            try:
+                write_env(deps.env_path, args.url, created)
+                print(f"credentials written to {deps.env_path} (git-ignored)", file=out)
+            except OSError as error:
+                names = ", ".join(c[1] for c in created)
+                print(f"USERS CREATED BUT CREDENTIALS NOT SAVED ({type(error).__name__}): "
+                      f"{names}. Reset them from the admin UI.", file=sys.stderr)
+
+
+if __name__ == "__main__":
+    sys.exit(main())
