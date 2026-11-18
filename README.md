@@ -18,11 +18,11 @@ conclusiones.
 | Seguridad estática | Completo (RUN-SONAR-SCAN-W002) | 6 vulnerabilidades triadas; ninguna explotable confirmada en el despliegue evaluado |
 | Seguridad dinámica | Completo (RUN-ZAP-001/002) | 0 alertas de riesgo alto; 2 defectos funcionales detectados |
 | Rendimiento (RNF-04) | Completo (RUN-PERF-001) | p95 de 30 ms frente a un umbral de 1500 ms; 0 % de errores |
-| Defectos | Completo | DEF-001..DEF-004, todos de severidad Menor, con ciclo de vida y causa raíz |
+| Defectos | Completo | DEF-001..DEF-005, todos de severidad Menor, con ciclo de vida y causa raíz |
 | KPIs | Completo | Cobertura de requisitos 13/13; 15 de 16 casos aprobados |
 | Fiabilidad (RNF-03) | Completo (RUN-REL-002) | 10/10 ciclos con sus datos intactos durante 15 min |
 | Mantenibilidad (RNF-06) | Completo | Rating A con 10 code smells; validación repartida en 5 capas y autorización centralizada en el repositorio genérico |
-| Usabilidad (RNF-02) | Pendiente | Requiere dos participantes del grupo |
+| Usabilidad (RNF-02) | Completo (RUN-USA-001) | 2/2 participantes completaron la tarea, en 4:30 y 3:30, sin errores bloqueantes |
 | Informe final | Pendiente | — |
 
 ## Documentación
@@ -31,11 +31,12 @@ conclusiones.
 | --- | --- |
 | [`documentacion/plan-de-pruebas.md`](documentacion/plan-de-pruebas.md) | Plan de pruebas basado en ISO/IEC/IEEE 29119-3: objetivos, niveles, estrategias, técnicas, criterios, recursos, riesgos y cronograma |
 | [`documentacion/casos-de-prueba.md`](documentacion/casos-de-prueba.md) | Ambiente, técnicas de diseño, casos manuales y automatizados con resultado obtenido, y trazabilidad |
-| [`documentacion/defectos/registro-defectos.md`](documentacion/defectos/registro-defectos.md) | Ciclo de vida, defectos DEF-001..DEF-004 y observaciones |
+| [`documentacion/defectos/registro-defectos.md`](documentacion/defectos/registro-defectos.md) | Ciclo de vida, defectos DEF-001..DEF-005 y observaciones |
 | [`documentacion/seguridad/reporte-zap.md`](documentacion/seguridad/reporte-zap.md) | Escaneos ZAP y correspondencia con OWASP Top 10:2025 |
 | [`documentacion/seguridad/triage-sonar-RUN-SONAR-SCAN-W002.md`](documentacion/seguridad/triage-sonar-RUN-SONAR-SCAN-W002.md) | Triage de vulnerabilidades y bugs de SonarQube |
 | [`documentacion/rendimiento/reporte-rendimiento.md`](documentacion/rendimiento/reporte-rendimiento.md) | Prueba de carga RUN-PERF-001 |
 | [`documentacion/fiabilidad/reporte-fiabilidad.md`](documentacion/fiabilidad/reporte-fiabilidad.md) | Protocolo de fiabilidad RUN-REL-002 |
+| [`documentacion/usabilidad/reporte-usabilidad.md`](documentacion/usabilidad/reporte-usabilidad.md) | Prueba de usabilidad RUN-USA-001, con su protocolo, instrucción y hoja de registro |
 | [`documentacion/mantenibilidad/reporte-mantenibilidad.md`](documentacion/mantenibilidad/reporte-mantenibilidad.md) | Trazado de dos rutas hasta la persistencia y code smells de SonarQube |
 | [`documentacion/kpis.md`](documentacion/kpis.md) | Indicadores de calidad e interpretación de las métricas de SonarQube |
 | [`documentacion/responsabilidades.md`](documentacion/responsabilidades.md) | Responsables por frente y quién ejecutó cada corrida |
@@ -65,6 +66,7 @@ pruebas/
 ├── preparar_datos.py          # Crea hogares y usuarios sintéticos en una instancia local
 ├── preparar_datos_ci.py       # Versión no interactiva para el CI
 ├── rendimiento/               # Prueba de carga con Locust (RNF-04)
+├── usabilidad/                # Datos sintéticos de la sesión de usabilidad RNF-02
 ├── zap/                       # Ejecutor aislado de OWASP ZAP
 └── requirements.txt           # Dependencias fijadas de la suite
 reports/                       # Salidas crudas de cada corrida (ignorada por Git)

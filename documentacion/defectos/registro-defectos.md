@@ -30,6 +30,7 @@ Mealie es software de terceros: el equipo no corrige su código. Un defecto conf
 | DEF-002 | Comentarios de una receta inexistente responden 500 en lugar de 404 | Menor | Media | Analizado | A10 |
 | DEF-003 | El 11.º recetario con el mismo nombre falla y expone un error interno | Menor | Media | Analizado | A10 |
 | DEF-004 | El planificador de comidas se abre sin sesión y no redirige al login | Menor | Baja | Analizado | — |
+| DEF-005 | El plan de comidas acepta una receta inexistente y guarda una entrada sin nombre | Menor | Baja | Analizado | — |
 
 ## DEF-001 — Tag o herramienta inexistente por slug responde 500
 
@@ -91,10 +92,30 @@ Mealie es software de terceros: el equipo no corrige su código. Un defecto conf
 
 **Historial (UTC):** Nuevo 2026-11-17 ~23:00 (CP-M10) → Confirmado ~23:00 (segunda observación de la grilla vacía sin sesión; captura `CP-M10-planificador-sin-sesion.jpg`) → Analizado 23:01 (causa en el frontend).
 
+## DEF-005 — El plan de comidas acepta una receta inexistente y guarda una entrada sin nombre
+
+| Campo | Contenido |
+| --- | --- |
+| Detectado | 2026-11-18, RUN-USA-001, sesión P1: tras *Add to Plan* desde la tarjeta de la receta, la entrada del 19/11 apareció sin nombre en el planificador |
+| Ambiente | Mealie v3.25.1 local con SQLite (motor por defecto), usuario `qa_usuario_a` |
+| Pasos | 1. Token de `qa_usuario_a`. 2. `POST /api/households/mealplans` con `{"date": "2026-12-15", "entryType": "dinner", "recipeId": "<UUID aleatorio>", "title": ""}`. 3. `GET /api/households/mealplans/{id}` de la entrada creada. |
+| Resultado esperado | Rechazo con 404 o 422, porque la receta no existe |
+| Resultado obtenido | Paso 2: **201**; la entrada guarda el `recipeId` inventado y `recipe` es `null`. Paso 3: 200 con `recipe: null`. En el planificador la entrada se ve sin nombre. La entrada de prueba se borró |
+| Causa raíz | `mealie/db/models/household/mealplan.py:70` declara `ForeignKey("recipes.id")`, pero SQLite solo aplica claves foráneas con `PRAGMA foreign_keys=ON`, y `mealie/db/db_setup.py:15-31` solo configura `journal_mode=WAL`. Además, `CreatePlanEntry` (`mealie/schema/meal_plan/new_meal.py:34-46`) solo exige `recipe_id` o `title`, y `create_one` (`mealie/routes/households/controller_mealplan.py:102-104`) no comprueba que la receta exista. Con PostgreSQL la restricción debería aplicarse; no se probó |
+| Corrección propuesta | Comprobar en `create_one` y `update_one` que la receta exista y responder 404 si no, o habilitar `PRAGMA foreign_keys=ON` en la conexión SQLite |
+| Impacto | Entradas huérfanas en el plan que el usuario debe corregir a mano; no expone datos |
+| Disparo en la sesión | No reproducido desde la interfaz. Hipótesis: la pestaña conservaba identificadores de recetas que se borraron y recrearon al preparar los datos. En P2, sin ese cambio de identificadores, no ocurrió |
+
+**Historial (UTC):** Nuevo 2026-11-18 ~18:39 (sesión P1) → Confirmado ~18:54 (reproducción por API con un identificador inventado) → Analizado ~19:15 (causa en el modelo y la conexión SQLite).
+
 ## Observaciones de usabilidad (RUN-MAN-001)
 
 - **OBS-002:** la URL de una receta inexistente o eliminada (`/g/home/r/<slug>`) muestra una página vacía, sin mensaje de que la receta no existe (CP-M04, CP-M05). La API sí responde 404.
 - **OBS-003:** al renombrar una receta en modo edición, la barra de direcciones conserva el slug anterior hasta navegar de nuevo (CP-M04).
+
+## Observaciones de usabilidad (RUN-USA-001)
+
+- **OBS-004:** en la lista de compras, al escribir «Leche» en el campo *Food*, el autocompletado no ofrece «Leche» y resalta «dulce de leche» como primera opción. Les pasó a las dos participantes; ninguna lo eligió, porque usaron el campo *Note*.
 
 ## Observaciones pendientes de reproducir
 

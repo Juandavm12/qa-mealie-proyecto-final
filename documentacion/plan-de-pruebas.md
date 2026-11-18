@@ -45,7 +45,7 @@ IA, OIDC, LDAP, SMTP, pagos, importaciones reales de terceros, comparación de m
 | **Unitarias** | Funciones aisladas de Mealie y de las herramientas propias del grupo | 58 pruebas unitarias upstream de Mealie con instrumentación de cobertura (RUN-COV-001); 48 pruebas unitarias de los scripts propios (preparación de datos, ZAP, rendimiento), ejecutadas en el CI | Ejecutado |
 | **Integración** | API + autenticación + autorización por hogar + persistencia en SQLite, ejercitadas juntas | Casos automatizados CP-A01..CP-A05 por HTTP contra el backend real con su base de datos | Ejecutado (CI #1–#4) |
 | **Sistema** | La aplicación desplegada completa: interfaz Vue, API y base de datos | 11 casos manuales por la interfaz (RUN-MAN-001); escaneo ZAP (RUN-ZAP-001/002); prueba de carga (RUN-PERF-001); protocolo de fiabilidad (RUN-REL-002) | Ejecutado |
-| **Aceptación** | Cumplimiento de los criterios de aceptación de cada RF y de los objetivos RNF | Regla de RNF-01: un RF se acepta solo si todos sus subcriterios tienen una ejecución trazable y conforme; protocolos de usabilidad (RNF-02) y fiabilidad (RNF-03) | Parcial: RF y RNF-03 evaluados; RNF-02 pendiente |
+| **Aceptación** | Cumplimiento de los criterios de aceptación de cada RF y de los objetivos RNF | Regla de RNF-01: un RF se acepta solo si todos sus subcriterios tienen una ejecución trazable y conforme; protocolos de usabilidad (RNF-02) y fiabilidad (RNF-03) | Parcial: RF evaluados con un fallo (CP-M10); RNF-02 y RNF-03 cumplidos |
 
 **Justificación:** las pruebas unitarias upstream son la única forma de medir cobertura del código real de Mealie, porque las pruebas HTTP no instrumentan el servidor. Las pruebas de integración por API verifican de forma repetible la regla más sensible del alcance, el aislamiento entre hogares, que depende de la cooperación entre autenticación, filtros por `household_id` y persistencia. Las pruebas de sistema por la interfaz detectan fallos que la API no muestra; por ejemplo, DEF-004 solo es visible en el navegador. La aceptación la evalúa el equipo con criterios definidos antes de ejecutar, porque no hay usuarios finales disponibles.
 
@@ -193,7 +193,7 @@ La única fecha impuesta es la entrega del **22/11/2026 a las 23:59**. «Respons
 | KPIs y matriz de responsabilidades | Sara | 21/11 | 18/11 | JD (asistido) | Completo |
 | Plan de pruebas | Paula | 17/11 | 18/11 | JD (asistido) | Completo |
 | Fiabilidad (RNF-03) | Sara | 20/11 | 18/11 (RUN-REL-002 16:01–16:16; RUN-REL-001 inválida) | JD (asistido) | Completo |
-| Usabilidad (RNF-02), con dos participantes | Sara | 20/11 | — | — | Pendiente (propuesta: 20/11) |
+| Usabilidad (RNF-02), con dos participantes | Sara | 20/11 | 18/11 (RUN-USA-001 ~18:38–~19:00) | JD (facilitador, asistido); participantes Alejandra y Paula | Completo |
 | Mantenibilidad (RNF-06): trazado de dos rutas | Sara | 19/11 | 18/11 | JD (asistido) | Completo |
 | Borrador integral del informe | Paula | 21/11 | — | — | Pendiente |
 | Auditoría de la rúbrica y revisión del PDF | Paula, Alejandra, Sara | 22/11 antes de las 19:00 | — | — | Pendiente |

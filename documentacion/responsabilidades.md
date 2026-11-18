@@ -19,18 +19,18 @@ Esta matriz separa dos cosas que no deben confundirse:
 | Ambiente e instrumentación de cobertura | JD | Alejandra / Sara | JD (asistido) | RUN-COV-001 | Completo |
 | Diseño y ejecución manual | Paula | Sara / JD | JD (asistido) | `casos-de-prueba.md`, RUN-MAN-001 | Completo |
 | Plan de pruebas IEEE/ISO | Paula | Sara / JD | — | — | Pendiente |
-| Registro de defectos | Paula | Alejandra / Sara | JD (asistido) | `defectos/registro-defectos.md` (DEF-001..004) | Completo |
+| Registro de defectos | Paula | Alejandra / Sara | JD (asistido) | `defectos/registro-defectos.md` (DEF-001..005) | Completo |
 | Integración editorial del informe | Paula | Alejandra / Sara | — | — | Pendiente |
 | ZAP, OWASP, triage y mitigaciones | Alejandra | JD / Paula | JD (asistido) | RUN-ZAP-001, RUN-ZAP-002; `seguridad/reporte-zap.md` | Completo |
 | Rendimiento | Sara | Paula / Alejandra | JD (asistido) | RUN-PERF-001; `rendimiento/reporte-rendimiento.md` | Completo |
-| Usabilidad (RNF-02) | Sara | Paula / Alejandra | — | — | Pendiente |
+| Usabilidad (RNF-02) | Sara | Paula / Alejandra | JD (facilitador, asistido); participantes Alejandra (P1) y Paula (P2) | RUN-USA-001; `usabilidad/reporte-usabilidad.md` | Completo |
 | Fiabilidad (RNF-03) | Sara | Paula / Alejandra | JD (asistido) | RUN-REL-002 (RUN-REL-001 inválida); `fiabilidad/reporte-fiabilidad.md` | Completo |
 | SonarQube | Sara | Alejandra (seguridad estática), JD (cobertura) / Paula | JD (asistido) | RUN-SONAR-SCAN-W002; `seguridad/triage-sonar-RUN-SONAR-SCAN-W002.md` | Completo |
 | Mantenibilidad (RNF-06) | Sara | Alejandra / Paula | JD (asistido) | `mantenibilidad/reporte-mantenibilidad.md`; capturas 08–10 de RUN-SONAR-SCAN-W002 | Completo |
 | KPIs | Sara | JD (cobertura), Paula (casos) / Alejandra | JD (asistido) | `kpis.md` | Completo |
 | Entrega en Teams | JD | Paula como suplente / Alejandra y Sara | — | — | Pendiente |
 
-**Restricción de RNF-02:** el protocolo de usabilidad exige dos participantes del grupo distintos del diseñador de la tarea. No puede ejecutarlo una sola persona.
+**RNF-02:** el diseñador de la tarea (JD) no participó; las participantes no habían visto la tarea antes de su sesión.
 
 ## 2. Secciones del informe
 
