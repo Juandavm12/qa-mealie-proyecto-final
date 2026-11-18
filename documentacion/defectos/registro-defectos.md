@@ -29,6 +29,7 @@ Mealie es software de terceros: el equipo no corrige su código. Un defecto conf
 | DEF-001 | Tag o herramienta inexistente por slug responde 500 en lugar de 404 | Menor | Media | Analizado | A10 |
 | DEF-002 | Comentarios de una receta inexistente responden 500 en lugar de 404 | Menor | Media | Analizado | A10 |
 | DEF-003 | El 11.º recetario con el mismo nombre falla y expone un error interno | Menor | Media | Analizado | A10 |
+| DEF-004 | El planificador de comidas se abre sin sesión y no redirige al login | Menor | Baja | Analizado | — |
 
 ## DEF-001 — Tag o herramienta inexistente por slug responde 500
 
@@ -74,6 +75,26 @@ Mealie es software de terceros: el equipo no corrige su código. Un defecto conf
 | Impacto | No se pueden crear más de 10 recetarios con el mismo nombre en un hogar; el cliente recibe detalles internos |
 
 **Historial:** Nuevo 2026-11-17 22:06 (log) → Confirmado 22:10 (reproducción manual; se había previsto un 500 en el intento 12, el resultado real fue 400 en el 11) → Analizado 22:11.
+
+## DEF-004 — El planificador de comidas se abre sin sesión y no redirige al login
+
+| Campo | Contenido |
+| --- | --- |
+| Detectado | 2026-11-17, RUN-MAN-001, caso CP-M10 paso 3 |
+| Ambiente | Mealie v3.25.1 local, navegador sin sesión (después de cerrar la sesión de `qa_usuario_a`) |
+| Pasos | 1. Cerrar sesión. 2. Abrir `http://localhost:9925/household/mealplan/planner/view`. |
+| Resultado esperado | Redirección a `/login`, como ocurre con `/g/home` (CP-M02, paso 4) |
+| Resultado obtenido | La página carga la grilla de la semana (17–23 nov) vacía, con barra lateral reducida y un botón «Login». La entrada existente del 18 de noviembre no aparece y la API responde 401, así que **no se exponen datos** |
+| Causa raíz | `frontend/app/pages/household/mealplan/planner.vue` y `planner/view.vue` no declaran `definePageMeta`/`middleware`; otras páginas protegidas sí lo hacen (p. ej. `pages/g/[groupSlug]/cookbooks/index.vue:146-148`, `middleware: ["group-only"]`). No existe una redirección global al login para estas rutas |
+| Corrección propuesta | Declarar en esas páginas un middleware que exija sesión y redirija a `/login` |
+| Impacto | Inconsistencia de navegación: un visitante ve una pantalla funcional vacía en lugar del login; sin pérdida ni exposición de datos |
+
+**Historial (UTC):** Nuevo 2026-11-17 ~23:00 (CP-M10) → Confirmado ~23:00 (segunda observación de la grilla vacía sin sesión; captura `CP-M10-planificador-sin-sesion.jpg`) → Analizado 23:01 (causa en el frontend).
+
+## Observaciones de usabilidad (RUN-MAN-001)
+
+- **OBS-002:** la URL de una receta inexistente o eliminada (`/g/home/r/<slug>`) muestra una página vacía, sin mensaje de que la receta no existe (CP-M04, CP-M05). La API sí responde 404.
+- **OBS-003:** al renombrar una receta en modo edición, la barra de direcciones conserva el slug anterior hasta navegar de nuevo (CP-M04).
 
 ## Observaciones pendientes de reproducir
 

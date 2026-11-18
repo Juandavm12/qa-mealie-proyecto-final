@@ -1,6 +1,6 @@
 # Diseño de casos de prueba — Mealie v3.25.1
 
-**Estado:** diseño revisable, **sin ejecutar**. «Resultado obtenido» y «Estado» se completan solo con la ejecución real y su evidencia (`RUN-xxx`). Fuente de requisitos: `Alcance_requisitos_y_responsabilidades.md` (RF-01..RF-05). Contratos verificados en el código del tag `v3.25.1` (commit `cce7601e`); las referencias `archivo:línea` son relativas a `mealie-v3.25.1/`.
+**Estado:** casos manuales **ejecutados** en RUN-MAN-001 (2026-11-17/18; ejecutor JD, ejecución asistida por Claude Code). «Resultado obtenido» y «Estado» resumen esa corrida; el registro crudo y las capturas están en `reports/manual/RUN-MAN-001/` (fuera de Git). Los resultados esperados se conservan tal como se diseñaron; donde el diseño resultó incorrecto se indica la corrección. Fuente de requisitos: `Alcance_requisitos_y_responsabilidades.md` (RF-01..RF-05). Contratos verificados en el código del tag `v3.25.1` (commit `cce7601e`); las referencias `archivo:línea` son relativas a `mealie-v3.25.1/`.
 
 ## 1. Ambiente y datos de prueba
 
@@ -76,8 +76,8 @@ Regla: `SECURITY_MAX_LOGIN_ATTEMPTS = 5` (`mealie/core/settings/settings.py:231`
 | Datos de entrada | Email de `qa_usuario_a` y su contraseña válida |
 | Pasos | 1. Abrir `http://localhost:9925/login`. 2. Ingresar email y contraseña. 3. Pulsar «Login». 4. Abrir el menú de perfil. |
 | Resultado esperado | Redirección a la página principal del hogar; el perfil muestra `qa_usuario_a` y el hogar `QA-Hogar-A` |
-| Resultado obtenido | *(pendiente de ejecución)* |
-| Estado | *(Aprobado / Fallido tras ejecutar)* |
+| Resultado obtenido | Redirección a `/g/home`; la barra lateral y el perfil muestran «QA Usuario A»; la sesión corresponde a `qa_usuario_a`, hogar `QA-Hogar-A`, sin rol de administrador |
+| Estado | **Aprobado** |
 
 ### CP-M02 — Inicio de sesión con contraseña incorrecta
 | Campo | Contenido |
@@ -88,8 +88,8 @@ Regla: `SECURITY_MAX_LOGIN_ATTEMPTS = 5` (`mealie/core/settings/settings.py:231`
 | Datos de entrada | Email de `qa_usuario_a` y contraseña `QA-incorrecta-1` |
 | Pasos | 1. Abrir `/login`. 2. Ingresar los datos. 3. Pulsar «Login». 4. Intentar abrir `http://localhost:9925/g/home` directamente. 5. Iniciar sesión con la contraseña correcta (restablece el contador, `credentials_provider.py:54`). |
 | Resultado esperado | Mensaje de error de credenciales; permanece en `/login`; el paso 4 redirige a `/login`; el paso 5 entra normalmente |
-| Resultado obtenido | *(pendiente)* |
-| Estado | *(pendiente)* |
+| Resultado obtenido | Paso 3: 401 y aviso «Invalid Credentials»; permanece en `/login`. Paso 4: `/g/home` redirige a `/login`. Paso 5: entra normalmente. Dos intentos previos se anularon porque el gestor de contraseñas del navegador sobrescribía el campo; no es defecto de Mealie |
+| Estado | **Aprobado** |
 
 ### CP-M03 — Crear y consultar una receta
 | Campo | Contenido |
@@ -100,8 +100,8 @@ Regla: `SECURITY_MAX_LOGIN_ATTEMPTS = 5` (`mealie/core/settings/settings.py:231`
 | Datos de entrada | Nombre `QA-RUN001-receta`; ingrediente `200 g arroz`; paso «Cocinar 15 minutos» |
 | Pasos | 1. «+ Create» → «Create Recipe». 2. Escribir el nombre y crear. 3. Agregar ingrediente y paso; guardar. 4. Recargar la página (F5). 5. Buscar `QA-RUN001` en el listado de recetas. |
 | Resultado esperado | Tras recargar, la receta conserva nombre, ingrediente y paso; aparece en la búsqueda con URL `/recipe/qa-run001-receta` |
-| Resultado obtenido | *(pendiente)* |
-| Estado | *(pendiente)* |
+| Resultado obtenido | Tras recargar conserva nombre, ingrediente `200 g arroz` y paso «Cocinar 15 minutos»; la búsqueda devuelve 1 resultado. **Corrección del diseño:** la URL real es `/g/home/r/qa-run001-receta` (rutas v3 `/g/{grupo}/r/{slug}`), no `/recipe/…` |
+| Estado | **Aprobado** |
 
 ### CP-M04 — Editar una receta
 | Campo | Contenido |
@@ -112,8 +112,8 @@ Regla: `SECURITY_MAX_LOGIN_ATTEMPTS = 5` (`mealie/core/settings/settings.py:231`
 | Datos de entrada | Nuevo nombre `QA-RUN001-receta-editada` |
 | Pasos | 1. Abrir la receta. 2. Editar. 3. Cambiar el nombre y guardar. 4. Recargar. 5. Abrir la URL anterior `/recipe/qa-run001-receta`. |
 | Resultado esperado | Se muestra el nombre nuevo y la URL pasa a `/recipe/qa-run001-receta-editada` (el slug se regenera al renombrar, `mealie/repos/repository_recipes.py:208-209`); la URL anterior ya no muestra la receta |
-| Resultado obtenido | *(pendiente)* |
-| Estado | *(pendiente)* |
+| Resultado obtenido | Nombre y slug pasan a `qa-run001-receta-editada`; la URL anterior ya no muestra la receta (API 404). Observaciones de usabilidad: la URL anterior muestra una página vacía sin mensaje, y en modo edición la barra de direcciones conserva el slug anterior. Un primer intento se anuló por un clic fallido del ejecutor |
+| Estado | **Aprobado** |
 
 ### CP-M05 — Eliminar una receta propia
 | Campo | Contenido |
@@ -124,8 +124,8 @@ Regla: `SECURITY_MAX_LOGIN_ATTEMPTS = 5` (`mealie/core/settings/settings.py:231`
 | Datos de entrada | Receta `QA-RUN001-receta-editada` |
 | Pasos | 1. Abrir la receta. 2. Menú «⋮» → «Delete» → confirmar. 3. Buscar `QA-RUN001` en el listado. 4. Abrir `/recipe/qa-run001-receta-editada`. |
 | Resultado esperado | La receta no aparece en la búsqueda; la URL muestra que no existe (API: `GET /api/recipes/{slug}` → 404, `recipe_crud_routes.py:102-106`) |
-| Resultado obtenido | *(pendiente)* |
-| Estado | *(pendiente)* |
+| Resultado obtenido | La receta no aparece en la búsqueda y la API responde 404. La URL muestra una página vacía, sin mensaje de que la receta no existe (misma observación que CP-M04) |
+| Estado | **Aprobado con observación** |
 
 ### CP-M06 — Asociar una receta al plan de comidas
 | Campo | Contenido |
@@ -136,8 +136,8 @@ Regla: `SECURITY_MAX_LOGIN_ATTEMPTS = 5` (`mealie/core/settings/settings.py:231`
 | Datos de entrada | Fecha `2026-11-18`, tipo `Dinner`, receta `QA-RUN001-plan` |
 | Pasos | 1. Abrir «Meal Planner». 2. Ubicar `2026-11-18`; agregar entrada tipo Dinner con la receta. 3. Recargar. 4. Comparar con `2026-11-19`. |
 | Resultado esperado | Tras recargar, `2026-11-18` muestra la receta como Dinner; `2026-11-19` no tiene esa entrada |
-| Resultado obtenido | *(pendiente)* |
-| Estado | *(pendiente)* |
+| Resultado obtenido | Tras recargar, el 18 de noviembre muestra la receta como Dinner y el 19 no tiene entradas; la API devuelve una sola entrada (id 1, `dinner`) |
+| Estado | **Aprobado** |
 
 ### CP-M07 — Lista de compras: agregar y marcar ítem
 | Campo | Contenido |
@@ -148,8 +148,8 @@ Regla: `SECURITY_MAX_LOGIN_ATTEMPTS = 5` (`mealie/core/settings/settings.py:231`
 | Datos de entrada | Lista `QA-RUN001-lista`; ítem `QA-arroz`, cantidad 2 |
 | Pasos | 1. «Shopping Lists» → crear la lista. 2. Agregar el ítem con cantidad 2. 3. Recargar. 4. Marcar el ítem como comprado. 5. Recargar. |
 | Resultado esperado | Paso 3: un solo ítem `QA-arroz` con cantidad 2. Paso 5: el ítem aparece marcado/en comprados, sin duplicados |
-| Resultado obtenido | *(pendiente)* |
-| Estado | *(pendiente)* |
+| Resultado obtenido | Paso 3: un solo ítem `QA-arroz`, cantidad 2. Paso 5: el ítem queda en «One item checked» (API `checked: true`), sin duplicados |
+| Estado | **Aprobado** |
 
 ### CP-M08 — Crear receta por API: particiones de `name`
 | Campo | Contenido |
@@ -160,8 +160,8 @@ Regla: `SECURITY_MAX_LOGIN_ATTEMPTS = 5` (`mealie/core/settings/settings.py:231`
 | Datos de entrada | EV1 `{"name":"QA-RUN001-particion"}`, EI1 `{}`, EI2 `{"name":null}` |
 | Pasos | 1. En `/docs`, `POST /api/recipes` con EV1. 2. Repetir con EI1. 3. Repetir con EI2. 4. `GET /api/recipes?search=QA-RUN001-particion`. |
 | Resultado esperado | EV1 → 201 con slug; EI1 → 422; EI2 → 422; el paso 4 devuelve exactamente 1 receta |
-| Resultado obtenido | *(pendiente, por subcaso)* |
-| Estado | *(pendiente, por subcaso)* |
+| Resultado obtenido | EV1 → 201 `"qa-run001-particion"`; EI1 → 422 `missing`; EI2 → 422 `string_type`. Paso 4: la búsqueda devuelve 2 recetas porque no es exacta (también coincide `QA-RUN001-plan`); el hogar tiene solo esas 2 recetas, así que las clases inválidas no crearon nada. **Corrección del diseño:** el oráculo del paso 4 debe contar recetas con nombre exacto (resultado: 1) |
+| Estado | **Aprobado** (EV1, EI1, EI2) |
 
 ### CP-M09 — Cambio de contraseña: valores límite 7/8/9
 | Campo | Contenido |
@@ -172,8 +172,8 @@ Regla: `SECURITY_MAX_LOGIN_ATTEMPTS = 5` (`mealie/core/settings/settings.py:231`
 | Datos de entrada | Contraseñas nuevas de 7, 8 y 9 caracteres |
 | Pasos | Por subcaso: 1. `PUT /api/users/password` con `currentPassword` y `newPassword`. 2. Verificar login con la contraseña vigente esperada. 3. Pedir un token nuevo antes del siguiente subcaso (el cambio invalida sesiones previas, `mealie/db/models/users/users.py:207-213`). |
 | Resultado esperado | 7 → 422 y la anterior sigue válida; 8 → 200 y login con la nueva; 9 → 200 y login con la nueva |
-| Resultado obtenido | *(pendiente, por subcaso)* |
-| Estado | *(pendiente, por subcaso)* |
+| Resultado obtenido | 7 → 422 `string_too_short` y la anterior sigue válida (login 200); 8 → 200 y login con la nueva 200; 9 → 200 y login con la nueva 200. Se restauró la contraseña original de `qa_usuario_c` |
+| Estado | **Aprobado** (a, b, c) |
 
 ### CP-M10 — Plan de comidas sin sesión
 | Campo | Contenido |
@@ -184,8 +184,8 @@ Regla: `SECURITY_MAX_LOGIN_ATTEMPTS = 5` (`mealie/core/settings/settings.py:231`
 | Datos de entrada | `id` de la entrada |
 | Pasos | 1. En ventana privada abrir `http://localhost:9925/api/households/mealplans/{id}`. 2. Abrir `http://localhost:9925/api/households/mealplans`. 3. Abrir la UI del planificador. |
 | Resultado esperado | Pasos 1–2: 401 `{"detail":"Not authenticated"}` sin datos del plan; paso 3: redirección a `/login` |
-| Resultado obtenido | *(pendiente)* |
-| Estado | *(pendiente)* |
+| Resultado obtenido | Pasos 1–2: 401 sin datos del plan, con mensaje `Could not validate credentials` (**corrección del diseño:** no «Not authenticated»; `dependencies.py:29-31, 76-89`). Paso 3: **no redirige a `/login`**: muestra la grilla de la semana vacía con un botón «Login». El plan no se expone, pero no se cumple el resultado esperado → **DEF-004** |
+| Estado | **Fallido** (paso 3) |
 
 ### CP-M11 — Bloqueo de cuenta: valores límite 4/5/6
 | Campo | Contenido |
@@ -196,8 +196,8 @@ Regla: `SECURITY_MAX_LOGIN_ATTEMPTS = 5` (`mealie/core/settings/settings.py:231`
 | Datos de entrada | Contraseña errónea `QA-incorrecta-1`; contraseña correcta en el 6.º intento |
 | Pasos | 1. Enviar 4 logins erróneos a `POST /api/auth/token`. 2. Enviar el 5.º erróneo. 3. Enviar el 6.º con la contraseña correcta. 4. El administrador desbloquea a `qa_usuario_c`. |
 | Resultado esperado | Intentos 1–5: 401; intento 6: 423 «User is locked out» aun con la contraseña correcta; tras desbloquear, login correcto → 200 |
-| Resultado obtenido | *(pendiente)* |
-| Estado | *(pendiente)* |
+| Resultado obtenido | Intentos 1–5: 401 `Unauthorized`; intento 6 con la contraseña correcta: 423 «User is locked out»; tras «Reset Locked Users» del administrador («1 user(s) unlocked»), login correcto → 200 |
+| Estado | **Aprobado** |
 
 ## 4. Casos automatizados (Pytest + cliente HTTP)
 
