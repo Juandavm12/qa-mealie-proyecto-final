@@ -27,6 +27,7 @@ conclusiones.
 
 | Documento | Contenido |
 | --- | --- |
+| [`documentacion/plan-de-pruebas.md`](documentacion/plan-de-pruebas.md) | Plan de pruebas basado en ISO/IEC/IEEE 29119-3: objetivos, niveles, estrategias, técnicas, criterios, recursos, riesgos y cronograma |
 | [`documentacion/casos-de-prueba.md`](documentacion/casos-de-prueba.md) | Ambiente, técnicas de diseño, casos manuales y automatizados con resultado obtenido, y trazabilidad |
 | [`documentacion/defectos/registro-defectos.md`](documentacion/defectos/registro-defectos.md) | Ciclo de vida, defectos DEF-001..DEF-004 y observaciones |
 | [`documentacion/seguridad/reporte-zap.md`](documentacion/seguridad/reporte-zap.md) | Escaneos ZAP y correspondencia con OWASP Top 10:2025 |
